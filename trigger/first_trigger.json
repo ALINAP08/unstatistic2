@@ -1,0 +1,22 @@
+{
+	"name": "first_trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2022-05-27T14:07:00",
+				"timeZone": "FLE Standard Time",
+				"schedule": {
+					"hours": [
+						15
+					]
+				}
+			}
+		}
+	}
+}
