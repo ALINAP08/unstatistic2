@@ -1,0 +1,471 @@
+{
+	"name": "CopyPipeline_ov9",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_ov9",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_items",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_ov9",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "dbo.@{item().destination.table}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"tableOption": "autoCreate"
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false,
+								"translator": {
+									"value": "@item().copyActivity.translator",
+									"type": "Expression"
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_ov9",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().source.table"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_ov9",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().destination.table"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"cw_items": {
+				"type": "Array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "dicAdmitSource"
+						},
+						"destination": {
+							"table": "dicAdmitSource"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ID",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "Code",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Code",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Description",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Description",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "InsertDateTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "InsertDateTime",
+											"type": "DateTime"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "dicAgebyAdmitDate"
+						},
+						"destination": {
+							"table": "dicAgebyAdmitDate"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ID",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "Code",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Code",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Group1_ID",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "Group1_ID",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "Group1",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Group1",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MinValue",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "MinValue",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "MaxValue",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "MaxValue",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "InsertDateTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "InsertDateTime",
+											"type": "DateTime"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "dicAgebyDischargeDate"
+						},
+						"destination": {
+							"table": "dicAgebyDischargeDate"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ID",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "Code",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Code",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Group1_ID",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "Group1_ID",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "Group1",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Group1",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MinValue",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "MinValue",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "MaxValue",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "MaxValue",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "InsertDateTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "InsertDateTime",
+											"type": "DateTime"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "dicBillHold"
+						},
+						"destination": {
+							"table": "dicBillHold"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ID",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "Code",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Code",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Description",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Description",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "InsertDateTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "InsertDateTime",
+											"type": "DateTime"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "dicCoder"
+						},
+						"destination": {
+							"table": "dicCoder"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ID",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "ID",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "Code",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Code",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Description",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Description",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "InsertDateTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "InsertDateTime",
+											"type": "DateTime"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					}
+				]
+			}
+		},
+		"annotations": []
+	}
+}
