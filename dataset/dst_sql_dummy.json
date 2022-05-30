@@ -5,6 +5,16 @@
 			"referenceName": "unstatisticdbaparklinkedservice",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"Container": {
+				"type": "string",
+				"defaultValue": "unstaticcontapp"
+			},
+			"FileName": {
+				"type": "string",
+				"defaultValue": "new.csv"
+			}
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [],
