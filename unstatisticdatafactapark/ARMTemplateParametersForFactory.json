@@ -10,6 +10,9 @@
 		},
 		"unstatisticdbaparklinkedservice_connectionString": {
 			"value": ""
+		},
+		"unstatisticuploadapp_connectionString": {
+			"value": ""
 		}
 	}
 }

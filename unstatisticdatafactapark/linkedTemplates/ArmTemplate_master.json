@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'unstatisticdbaparklinkedservice'"
 		},
+		"unstatisticuploadapp_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'unstatisticuploadapp'"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -44,6 +48,9 @@
 					},
 					"unstatisticdbaparklinkedservice_connectionString": {
 						"value": "[parameters('unstatisticdbaparklinkedservice_connectionString')]"
+					},
+					"unstatisticuploadapp_connectionString": {
+						"value": "[parameters('unstatisticuploadapp_connectionString')]"
 					},
 					"localsqldb_connectionString": {
 						"value": "[parameters('localsqldb_connectionString')]"
