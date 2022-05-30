@@ -1,0 +1,61 @@
+{
+	"name": "dst_sql_test",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "unstatisticdbaparklinkedservice",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "AccountNumber",
+				"type": "varchar"
+			},
+			{
+				"name": "AccountSuffix",
+				"type": "varchar"
+			},
+			{
+				"name": "EMPINumber",
+				"type": "varchar"
+			},
+			{
+				"name": "FacilityID",
+				"type": "varchar"
+			},
+			{
+				"name": "ServiceDate",
+				"type": "varchar"
+			},
+			{
+				"name": "AdmitDate",
+				"type": "varchar"
+			},
+			{
+				"name": "DischargeDate",
+				"type": "varchar"
+			},
+			{
+				"name": "FinalBillDate",
+				"type": "varchar"
+			},
+			{
+				"name": "TxnInsurancePlan",
+				"type": "varchar"
+			},
+			{
+				"name": "TxnFinancialClass",
+				"type": "varchar"
+			},
+			{
+				"name": "HTRID",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "test"
+		}
+	}
+}

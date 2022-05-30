@@ -5,6 +5,201 @@
 			{
 				"name": "copy to Sql",
 				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "SP Create",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": "TRUNCATE TABLE [dbo].[test];",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "AccountNumber",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AccountNumber",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AccountSuffix",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AccountSuffix",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "EMPINumber",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "EMPINumber",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FacilityID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FacilityID",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "ServiceDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ServiceDate",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "AdmitDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AdmitDate",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "DischargeDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "DischargeDate",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "FinalBillDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FinalBillDate",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TxnInsurancePlan",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TxnInsurancePlan",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TxnFinancialClass",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TxnFinancialClass",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "HTRID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "HTRID",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "src_csv_new",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "dst_sql_test",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "SP Create",
+				"type": "SqlServerStoredProcedure",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -15,10 +210,143 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableStaging": false
+					"storedProcedureName": "[dbo].[pipelineExecutiHistiry_Create]",
+					"storedProcedureParameters": {
+						"PipelineName": {
+							"value": {
+								"value": "@pipeline().Pipeline",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"PipelineRunID": {
+							"value": {
+								"value": "@pipeline().RunId",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "unstatisticdbaparklinkedservice",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "SP Update",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "copy to Sql",
+						"dependencyConditions": [
+							"Succeeded",
+							"Skipped"
+						]
+					},
+					{
+						"activity": "Set variable Status",
+						"dependencyConditions": [
+							"Succeeded",
+							"Skipped"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[pipelineExecutiHistiry_Update]",
+					"storedProcedureParameters": {
+						"Description": {
+							"value": {
+								"value": "@variables('PipelineExecDescription')",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"PipelineName": {
+							"value": {
+								"value": "@pipeline().Pipeline",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"PipelineRunID": {
+							"value": {
+								"value": "@pipeline().RunId",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Status": {
+							"value": {
+								"value": "@variables('PipelineExecStatus')",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "unstatisticdbaparklinkedservice",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Set variable Description",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "copy to Sql",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "PipelineExecDescription",
+					"value": {
+						"value": "@activity('copy to Sql').error.message",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable Status",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set variable Description",
+						"dependencyConditions": [
+							"Succeeded",
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "PipelineExecStatus",
+					"value": "Failed"
 				}
 			}
 		],
+		"variables": {
+			"PipelineExecDescription": {
+				"type": "String",
+				"defaultValue": "succeed"
+			},
+			"PipelineExecStatus": {
+				"type": "String",
+				"defaultValue": "succeed"
+			}
+		},
 		"folder": {
 			"name": "unstatistic"
 		},
