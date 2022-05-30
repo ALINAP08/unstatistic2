@@ -371,6 +371,19 @@
 				}
 			}
 		],
+		"parameters": {
+			"Container": {
+				"type": "string",
+				"defaultValue": "unstaticcontapp"
+			},
+			"Path": {
+				"type": "string"
+			},
+			"FileName": {
+				"type": "string",
+				"defaultValue": "new.csv"
+			}
+		},
 		"variables": {
 			"PipelineExecDescription": {
 				"type": "String",
