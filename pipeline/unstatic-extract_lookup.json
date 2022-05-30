@@ -254,7 +254,7 @@
 						]
 					},
 					{
-						"activity": "FileName",
+						"activity": "Lookup_FileName",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -345,7 +345,7 @@
 				}
 			},
 			{
-				"name": "FileName",
+				"name": "Lookup_FileName",
 				"type": "Lookup",
 				"dependsOn": [
 					{
