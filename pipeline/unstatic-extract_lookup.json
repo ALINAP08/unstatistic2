@@ -373,10 +373,6 @@
 						"referenceName": "dst_sql_dummy",
 						"type": "DatasetReference",
 						"parameters": {
-							"Container": {
-								"value": "@pipeline().parameters.Container",
-								"type": "Expression"
-							},
 							"FileName": {
 								"value": "@pipeline().parameters.FileName",
 								"type": "Expression"
