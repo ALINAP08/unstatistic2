@@ -9,6 +9,10 @@
 		"type": "AzureSqlTable",
 		"schema": [
 			{
+				"name": "Filename",
+				"type": "varchar"
+			},
+			{
 				"name": "AccountNumber",
 				"type": "varchar"
 			},
