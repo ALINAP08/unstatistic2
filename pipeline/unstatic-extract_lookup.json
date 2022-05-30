@@ -366,10 +366,6 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": {
-							"value": "@replace('Update [dbo].[test2]\nSET [FileName]=\"variableFileName\"\nwhere [FileName] IS NULL\nSelect 1;'\n,'variableFileName'\n,pipeline().parameters.FileName\n)",
-							"type": "Expression"
-						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
