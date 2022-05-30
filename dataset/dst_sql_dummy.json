@@ -5,6 +5,11 @@
 			"referenceName": "unstatisticdbaparklinkedservice",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"FileName": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [
