@@ -35,7 +35,6 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
-						"preCopyScript": "TRUNCATE TABLE [dbo].[test2];",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false,
 						"disableMetricsCollection": false
@@ -187,7 +186,17 @@
 				"inputs": [
 					{
 						"referenceName": "src_csv_new",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Container": {
+								"value": "@pipeline().parameters.Container",
+								"type": "Expression"
+							},
+							"FileName": {
+								"value": "@pipeline().parameters.FileName",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
@@ -375,9 +384,6 @@
 			"Container": {
 				"type": "string",
 				"defaultValue": "unstaticcontapp"
-			},
-			"Path": {
-				"type": "string"
 			},
 			"FileName": {
 				"type": "string",

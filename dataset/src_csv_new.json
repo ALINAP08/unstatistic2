@@ -10,9 +10,6 @@
 				"type": "string",
 				"defaultValue": "unstaticcontapp"
 			},
-			"Path": {
-				"type": "string"
-			},
 			"FileName": {
 				"type": "string",
 				"defaultValue": "new.csv"
