@@ -238,17 +238,16 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "copy to Sql",
+						"activity": "Set variable Status",
 						"dependencyConditions": [
 							"Succeeded",
 							"Skipped"
 						]
 					},
 					{
-						"activity": "Set variable Status",
+						"activity": "FileName",
 						"dependencyConditions": [
-							"Succeeded",
-							"Skipped"
+							"Succeeded"
 						]
 					}
 				],
@@ -334,6 +333,41 @@
 				"typeProperties": {
 					"variableName": "PipelineExecStatus",
 					"value": "Failed"
+				}
+			},
+			{
+				"name": "FileName",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "copy to Sql",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@replace('Update [dbo].[test2]\nSET [Filename]=\"variableFileName\"\nwhere [Filename] IS NULL\nSelect 1;'\n,'variableFileName'\n,variables('Filename')\n)",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "dst_sql_dummy",
+						"type": "DatasetReference"
+					}
 				}
 			}
 		],
