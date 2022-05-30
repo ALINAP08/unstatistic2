@@ -1,0 +1,12 @@
+{
+	"name": "dsr_sql_dummy2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "unstatisticdbaparklinkedservice",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}

@@ -374,7 +374,7 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "dst_sql_dummy",
+						"referenceName": "dsr_sql_dummy2",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
