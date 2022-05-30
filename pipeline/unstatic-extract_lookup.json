@@ -367,7 +367,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "@replace('Update [dbo].[test2] \nSET [Filename] = \"variablefilename\"\nwhere [Filename] IS NULL\nSelect 1;'\n,'variablefilename'\n,pipeline().parameters.FileName\n)",
+							"value": "@replace('Update [dbo].[test2] \nSET [Filename] =''variablefilename''\nwhere [Filename] IS NULL\nSelect 1;'\n,'variablefilename'\n,pipeline().parameters.FileName\n)",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
