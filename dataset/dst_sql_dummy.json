@@ -56,10 +56,6 @@
 				"name": "HTRID",
 				"type": "varchar"
 			}
-		],
-		"typeProperties": {
-			"schema": "dbo",
-			"table": "test2"
-		}
+		]
 	}
 }
