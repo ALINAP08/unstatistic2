@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Add SubmissionInfo",
+				"name": "Script1",
 				"type": "Script",
 				"dependsOn": [],
 				"policy": {
@@ -21,38 +21,19 @@
 				"typeProperties": {
 					"scripts": [
 						{
+							"parameters": [
+								{
+									"name": "",
+									"value": ""
+								}
+							],
 							"type": "Query",
-							"text": "Select \nconvert(int,FORMAT(getdate()-1, 'yyyyMMdd', 'en-us') )"
+							"text": "With datefield as (\nSelect getdate()-1 as PD,\n\tFORMAT((getdate()-1), 'yyyyMMdd', 'en-us') as PD_ID\n\t)\n\n\nSelect \n\t1 as FileHandle,\n\t (getdate()-1) as PostDate,\n\tFORMAT((getdate()-1), 'yyyyMMdd', 'en-us') AS PostDate_ID  ,\n \t'formatF_7.txt' as  FormatFileName,\n \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as FormatFilePath,\n \t'_rawATB' as TableName,\n \tConcat('Account_',month(PD),'.',day(PD),'.',year(PD),'.txt') as RawFileName,\n\t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as rawFilePath\nFrom datefield\nUnion all\nSelect \n\t2 as FileHandle,\n\t (getdate()-1) as PostDate,\n\tFORMAT((getdate()-1), 'yyyyMMdd', 'en-us') AS PostDate_ID  ,\n\t'formatF_7_txn_chr.txt' as  FormatFileName,\n \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as FormatFilePath,\n \t'_rawTXNS_CHGS' as TableName,\n \tConcat('Transaction-Charge__',month(PD),'.',day(PD),'.',year(PD),'.txt') as RawFileName,\n  \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as rawFilePath\nFrom datefield;"
 						}
 					]
 				}
-			},
-			{
-				"name": "Set variable1",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "Add SubmissionInfo",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "AmountColumn",
-					"value": {
-						"value": "@string(variables('AmountColumn'))",
-						"type": "Expression"
-					}
-				}
 			}
 		],
-		"variables": {
-			"AmountColumn": {
-				"type": "String"
-			}
-		},
 		"annotations": []
 	}
 }
