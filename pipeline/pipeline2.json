@@ -48,11 +48,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"pd_id": {
-				"type": "int"
-			}
-		},
 		"variables": {
 			"AmountColumn": {
 				"type": "String"
