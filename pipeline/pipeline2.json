@@ -51,9 +51,6 @@
 		"variables": {
 			"AmountColumn": {
 				"type": "String"
-			},
-			"Check_Existence": {
-				"type": "String"
 			}
 		},
 		"annotations": []
