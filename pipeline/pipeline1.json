@@ -26,6 +26,83 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "bulk_insert",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Script1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_BULK]",
+					"storedProcedureParameters": {
+						"AmountColumn": {
+							"value": "",
+							"type": "String"
+						},
+						"Check_Existence": {
+							"value": "",
+							"type": "Boolean"
+						},
+						"ClearTable": {
+							"value": "",
+							"type": "Boolean"
+						},
+						"FileHandle": {
+							"value": "",
+							"type": "Int32"
+						},
+						"FirstRow": {
+							"value": "",
+							"type": "Int32"
+						},
+						"FormatFileName": {
+							"value": "",
+							"type": "String"
+						},
+						"FormatFilePath": {
+							"value": "",
+							"type": "String"
+						},
+						"PostDate": {
+							"value": "",
+							"type": "DateTime"
+						},
+						"RawFileName": {
+							"value": "",
+							"type": "String"
+						},
+						"RawFilePath": {
+							"value": "",
+							"type": "String"
+						},
+						"RawTableName": {
+							"value": "",
+							"type": "String"
+						},
+						"RemoveLastRow": {
+							"value": "",
+							"type": "Int32"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"annotations": []
