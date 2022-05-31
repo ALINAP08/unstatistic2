@@ -22,7 +22,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "Select FORMAT(getdate()-1, 'yyyyMMdd', 'en-us') ) AS PostDate_ID "
+							"text": "Select FORMAT(getdate()-1, 'yyyyMMdd', 'en-us')  AS PostDate_ID "
 						}
 					]
 				}
