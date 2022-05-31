@@ -22,7 +22,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "Select FORMAT(getdate()-1, 'yyyyMMdd', 'en-us')  AS PostDate_ID "
+							"text": "Select [FilePath]\nFROM [mfv40_AlinaParkhormenko].[dbo].[cfgSubmissionInfo]"
 						}
 					]
 				}
@@ -42,7 +42,7 @@
 				"typeProperties": {
 					"variableName": "AmountColumn",
 					"value": {
-						"value": "@getPastTime(variables('AmountColumn'))",
+						"value": "@variables('AmountColumn')",
 						"type": "Expression"
 					}
 				}
