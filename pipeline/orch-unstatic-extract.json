@@ -134,6 +134,23 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "Fail unstatic-extract",
+				"type": "Fail",
+				"dependsOn": [
+					{
+						"activity": "unstatic-extract",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"message": "Pipeline unstatic-extract Failed",
+					"errorCode": "101"
+				}
 			}
 		],
 		"variables": {
