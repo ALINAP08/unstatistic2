@@ -22,7 +22,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "Select [FilePath]\nFROM [mfv40_AlinaParkhormenko].[dbo].[cfgSubmissionInfo]"
+							"text": "Select \nconvert(int,FORMAT(getdate()-1, 'yyyyMMdd', 'en-us') "
 						}
 					]
 				}
@@ -42,12 +42,17 @@
 				"typeProperties": {
 					"variableName": "AmountColumn",
 					"value": {
-						"value": "@activity('Add SubmissionInfo').output",
+						"value": "@string(pipeline().parameters.pd_id)",
 						"type": "Expression"
 					}
 				}
 			}
 		],
+		"parameters": {
+			"pd_id": {
+				"type": "int"
+			}
+		},
 		"variables": {
 			"AmountColumn": {
 				"type": "String"
