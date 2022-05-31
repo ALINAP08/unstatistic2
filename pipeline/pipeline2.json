@@ -42,7 +42,7 @@
 				"typeProperties": {
 					"variableName": "AmountColumn",
 					"value": {
-						"value": "@activity('Add SubmissionInfo').output",
+						"value": "@getPastTime(variables('AmountColumn'))",
 						"type": "Expression"
 					}
 				}
