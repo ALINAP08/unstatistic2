@@ -22,7 +22,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "Select getdate()-1 as AmountColumn"
+							"text": "Select FORMAT(getdate()-1, 'yyyyMMdd', 'en-us') ) AS PostDate_ID "
 						}
 					]
 				}
@@ -50,7 +50,7 @@
 		],
 		"variables": {
 			"AmountColumn": {
-				"type": "Array"
+				"type": "String"
 			}
 		},
 		"annotations": []
