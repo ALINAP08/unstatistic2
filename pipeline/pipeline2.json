@@ -22,7 +22,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "Select \nconvert(int,FORMAT(getdate()-1, 'yyyyMMdd', 'en-us') "
+							"text": "Select \nconvert(int,FORMAT(getdate()-1, 'yyyyMMdd', 'en-us') )"
 						}
 					]
 				}
@@ -42,7 +42,7 @@
 				"typeProperties": {
 					"variableName": "AmountColumn",
 					"value": {
-						"value": "@string(pipeline().parameters.pd_id)",
+						"value": "@string(variables('AmountColumn'))",
 						"type": "Expression"
 					}
 				}
