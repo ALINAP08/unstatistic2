@@ -42,7 +42,7 @@
 				"typeProperties": {
 					"variableName": "AmountColumn",
 					"value": {
-						"value": "@variables('AmountColumn')",
+						"value": "@activity('Add SubmissionInfo').output",
 						"type": "Expression"
 					}
 				}
