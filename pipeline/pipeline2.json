@@ -22,7 +22,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "Select getdate()-1"
+							"text": "Select getdate()-1 as AmountColumn"
 						}
 					]
 				}
