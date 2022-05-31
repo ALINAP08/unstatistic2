@@ -1,0 +1,103 @@
+{
+	"name": "pipeline2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Script1",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "With datefield as (\nSelect getdate()-1 as PD,\n\tFORMAT((getdate()-1), 'yyyyMMdd', 'en-us') as PD_ID\n\t)\n\nInsert into [dbo].[cfgSubmissionInfo] ( \n\t\t[FileHandle]\n      \t,[PostDate]\n      \t,[PostDate_ID]\n      \t,[FormatFileName]\n      \t,[FormatFilePath]\n\t\t,[TableName]\n\t\t,[RawFileName]\n\t\t,[FilePath]\n    )\n\nSelect \n\t1 as FileHandle,\n\t (getdate()-1) as PostDate,\n\tFORMAT((getdate()-1), 'yyyyMMdd', 'en-us') AS PostDate_ID  ,\n \t'formatF_7.txt' as  FormatFileName,\n \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as FormatFilePath,\n \t'_rawATB' as TableName,\n \tConcat('Account_',month(PD),'.',day(PD),'.',year(PD),'.txt') as RawFileName,\n\t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as rawFilePath\nFrom datefield\nUnion all\nSelect \n\t2 as FileHandle,\n\t (getdate()-1) as PostDate,\n\tFORMAT((getdate()-1), 'yyyyMMdd', 'en-us') AS PostDate_ID  ,\n\t'formatF_7_txn_chr.txt' as  FormatFileName,\n \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as FormatFilePath,\n \t'_rawTXNS_CHGS' as TableName,\n \tConcat('Transaction-Charge__',month(PD),'.',day(PD),'.',year(PD),'.txt') as RawFileName,\n  \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as rawFilePath\nFrom datefield;"
+						}
+					]
+				}
+			},
+			{
+				"name": "Stored procedure1",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_BULK]",
+					"storedProcedureParameters": {
+						"AmountColumn": {
+							"value": "",
+							"type": "String"
+						},
+						"Check_Existence": {
+							"value": "",
+							"type": "Boolean"
+						},
+						"ClearTable": {
+							"value": "",
+							"type": "Boolean"
+						},
+						"FileHandle": {
+							"value": "",
+							"type": "Int32"
+						},
+						"FirstRow": {
+							"value": "",
+							"type": "Int32"
+						},
+						"FormatFileName": {
+							"value": "",
+							"type": "String"
+						},
+						"FormatFilePath": {
+							"value": "",
+							"type": "String"
+						},
+						"PostDate": {
+							"value": "",
+							"type": "DateTime"
+						},
+						"RawFileName": {
+							"value": "",
+							"type": "String"
+						},
+						"RawFilePath": {
+							"value": "",
+							"type": "String"
+						},
+						"RawTableName": {
+							"value": "",
+							"type": "String"
+						},
+						"RemoveLastRow": {
+							"value": "",
+							"type": "Int32"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": []
+	}
+}
