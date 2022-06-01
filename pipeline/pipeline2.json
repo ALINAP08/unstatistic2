@@ -78,7 +78,7 @@
 								"value": "@string(activity('Lookup1').output.firstRow.PostDate_ID)",
 								"type": "Expression"
 							},
-							"type": "DateTime"
+							"type": "String"
 						},
 						"RawFileName": {
 							"value": {
