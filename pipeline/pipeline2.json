@@ -26,53 +26,86 @@
 					"storedProcedureParameters": {
 						"AmountColumn": {
 							"value": {
-								"value": "@activity('Lookup1').output.firstrow.FileHandle",
+								"value": "@activity('Lookup1').output.firstrow.AmountColumn",
 								"type": "Expression"
 							},
 							"type": "String"
 						},
 						"Check_Existence": {
-							"value": "",
+							"value": {
+								"value": "@activity('Lookup1').output.firstrow.Check_Existence",
+								"type": "Expression"
+							},
 							"type": "Boolean"
 						},
 						"ClearTable": {
-							"value": "",
+							"value": {
+								"value": "@activity('Lookup1').output.firstrow.ClearTable",
+								"type": "Expression"
+							},
 							"type": "Boolean"
 						},
 						"FileHandle": {
-							"value": "",
+							"value": {
+								"value": "@activity('Lookup1').output.firstrow.ClearTable",
+								"type": "Expression"
+							},
 							"type": "Int32"
 						},
 						"FirstRow": {
-							"value": "",
+							"value": {
+								"value": "@activity('Lookup1').output.firstrow.FirstRow",
+								"type": "Expression"
+							},
 							"type": "Int32"
 						},
 						"FormatFileName": {
-							"value": "",
+							"value": {
+								"value": "@activity('Lookup1').output.firstrow.FormatFileName",
+								"type": "Expression"
+							},
 							"type": "String"
 						},
 						"FormatFilePath": {
-							"value": "",
+							"value": {
+								"value": "@activity('Lookup1').output.firstrow.FormatFilePath",
+								"type": "Expression"
+							},
 							"type": "String"
 						},
 						"PostDate": {
-							"value": "",
+							"value": {
+								"value": "@activity('Lookup1').output.firstrow.PostDate",
+								"type": "Expression"
+							},
 							"type": "DateTime"
 						},
 						"RawFileName": {
-							"value": "",
+							"value": {
+								"value": "@activity('Lookup1').output.firstrow.RawFileName",
+								"type": "Expression"
+							},
 							"type": "String"
 						},
 						"RawFilePath": {
-							"value": "",
+							"value": {
+								"value": "@activity('Lookup1').output.firstrow.RawFilePath",
+								"type": "Expression"
+							},
 							"type": "String"
 						},
 						"RawTableName": {
-							"value": "",
+							"value": {
+								"value": "@activity('Lookup1').output.firstrow.RawTableName",
+								"type": "Expression"
+							},
 							"type": "String"
 						},
 						"RemoveLastRow": {
-							"value": "",
+							"value": {
+								"value": "@activity('Lookup1').output.firstrow.RemoveLastRow",
+								"type": "Expression"
+							},
 							"type": "Int32"
 						}
 					}
@@ -85,7 +118,14 @@
 			{
 				"name": "Lookup1",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Script1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -97,6 +137,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"sqlReaderQuery": "Select * from [dbo].[cfgSubmissionInfo] where [FileHandle]=1",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
