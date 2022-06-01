@@ -130,7 +130,6 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "Select * from [dbo].[cfgSubmissionInfo] where [FileHandle]=1",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -138,7 +137,7 @@
 						"referenceName": "SqlServerTable1",
 						"type": "DatasetReference"
 					},
-					"firstRowOnly": true
+					"firstRowOnly": false
 				}
 			}
 		],
