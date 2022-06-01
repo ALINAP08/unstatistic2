@@ -75,7 +75,7 @@
 						},
 						"PostDate": {
 							"value": {
-								"value": "@activity('Lookup1').output.firstRow.PostDate_ID",
+								"value": "@string(activity('Lookup1').output.firstRow.PostDate_ID)",
 								"type": "Expression"
 							},
 							"type": "DateTime"
