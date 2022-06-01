@@ -123,6 +123,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"sqlReaderQuery": "Select *From [dbo].[cfgSubmissionInfo] where [FileHandle]=1",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
