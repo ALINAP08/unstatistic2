@@ -1,0 +1,72 @@
+{
+	"name": "SqlServerTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "localsqldb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "FileHandle",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "PostDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "PostDate_ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "FormatFileName",
+				"type": "varchar"
+			},
+			{
+				"name": "FormatFilePath",
+				"type": "varchar"
+			},
+			{
+				"name": "TableName",
+				"type": "varchar"
+			},
+			{
+				"name": "RawFileName",
+				"type": "varchar"
+			},
+			{
+				"name": "FilePath",
+				"type": "varchar"
+			},
+			{
+				"name": "AmountColumn",
+				"type": "varchar"
+			},
+			{
+				"name": "FirstRows",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "ClearTable",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "Check_Existence",
+				"type": "tinyint",
+				"precision": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "cfgSubmissionInfo"
+		}
+	}
+}
