@@ -100,13 +100,6 @@
 								"type": "Expression"
 							},
 							"type": "String"
-						},
-						"RemoveLastRow": {
-							"value": {
-								"value": "@activity('Lookup1').output.firstRow.RemoveLastRow",
-								"type": "Expression"
-							},
-							"type": "Int32"
 						}
 					}
 				},
