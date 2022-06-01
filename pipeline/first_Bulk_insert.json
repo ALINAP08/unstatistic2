@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Stored procedure1",
+				"name": "Bulk insert for Atb",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
@@ -200,7 +200,7 @@
 				}
 			},
 			{
-				"name": "Stored procedure1_copy1",
+				"name": "Bulk insert for TxnChar",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
