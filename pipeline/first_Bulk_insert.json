@@ -1,5 +1,5 @@
 {
-	"name": "pipeline2",
+	"name": "first_Bulk_insert",
 	"properties": {
 		"activities": [
 			{
@@ -7,7 +7,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "Lookup1",
+						"activity": "Lookup for Atb",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -26,77 +26,77 @@
 					"storedProcedureParameters": {
 						"AmountColumn": {
 							"value": {
-								"value": "@activity('Lookup1').output.firstRow.AmountColumn",
+								"value": "@activity('Lookup for Atb').output.firstRow.AmountColumn",
 								"type": "Expression"
 							},
 							"type": "String"
 						},
 						"Check_Existence": {
 							"value": {
-								"value": "@activity('Lookup1').output.firstRow.Check_Existence",
+								"value": "@activity('Lookup for Atb').output.firstRow.Check_Existence",
 								"type": "Expression"
 							},
 							"type": "Byte[]"
 						},
 						"ClearTable": {
 							"value": {
-								"value": "@activity('Lookup1').output.firstRow.ClearTable",
+								"value": "@activity('Lookup for Atb').output.firstRow.ClearTable",
 								"type": "Expression"
 							},
 							"type": "Byte[]"
 						},
 						"FileHandle": {
 							"value": {
-								"value": "@activity('Lookup1').output.firstRow.ClearTable",
+								"value": "@activity('Lookup for Atb').output.firstRow.ClearTable",
 								"type": "Expression"
 							},
 							"type": "Int32"
 						},
 						"FirstRow": {
 							"value": {
-								"value": "@activity('Lookup1').output.firstRow.FirstRows",
+								"value": "@activity('Lookup for Atb').output.firstRow.FirstRows",
 								"type": "Expression"
 							},
 							"type": "Int32"
 						},
 						"FormatFileName": {
 							"value": {
-								"value": "@activity('Lookup1').output.firstRow.FormatFileName",
+								"value": "@activity('Lookup for Atb').output.firstRow.FormatFileName",
 								"type": "Expression"
 							},
 							"type": "String"
 						},
 						"FormatFilePath": {
 							"value": {
-								"value": "@activity('Lookup1').output.firstRow.FormatFilePath",
+								"value": "@activity('Lookup for Atb').output.firstRow.FormatFilePath",
 								"type": "Expression"
 							},
 							"type": "String"
 						},
 						"PostDate": {
 							"value": {
-								"value": "@string(activity('Lookup1').output.firstRow.PostDate_ID)",
+								"value": "@string(activity('Lookup for Atb').output.firstRow.PostDate_ID)",
 								"type": "Expression"
 							},
 							"type": "String"
 						},
 						"RawFileName": {
 							"value": {
-								"value": "@activity('Lookup1').output.firstRow.RawFileName",
+								"value": "@activity('Lookup for Atb').output.firstRow.RawFileName",
 								"type": "Expression"
 							},
 							"type": "String"
 						},
 						"RawFilePath": {
 							"value": {
-								"value": "@activity('Lookup1').output.firstRow.FilePath",
+								"value": "@activity('Lookup for Atb').output.firstRow.FilePath",
 								"type": "Expression"
 							},
 							"type": "String"
 						},
 						"RawTableName": {
 							"value": {
-								"value": "@activity('Lookup1').output.firstRow.TableName",
+								"value": "@activity('Lookup for Atb').output.firstRow.TableName",
 								"type": "Expression"
 							},
 							"type": "String"
@@ -109,9 +109,16 @@
 				}
 			},
 			{
-				"name": "Lookup1",
+				"name": "Lookup for Atb",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Insert to cfgSubmissionInfo",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -132,6 +139,170 @@
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": true
+				}
+			},
+			{
+				"name": "Insert to cfgSubmissionInfo",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "With datefield as (\nSelect getdate()-1 as PD,\n\tFORMAT((getdate()-1), 'yyyyMMdd', 'en-us') as PD_ID\n\t)\n\nInsert into [dbo].[cfgSubmissionInfo] ( \n\t\t[FileHandle]\n      \t,[PostDate]\n      \t,[PostDate_ID]\n      \t,[FormatFileName]\n      \t,[FormatFilePath]\n\t\t,[TableName]\n\t\t,[RawFileName]\n\t\t,[FilePath]\n\t\t,[AmountColumn]\n\t\t,[FirstRows]\n    )\n\nSelect \n\t1 as FileHandle,\n\tPD as PostDate,\n\tPD_ID AS PostDate_ID  ,\n \t'formatF_7.txt' as  FormatFileName,\n \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as FormatFilePath,\n \t'_rawATB' as TableName,\n \tConcat('Account_',month(PD),'.',day(PD),'.',year(PD),'.txt') as RawFileName,\n\t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as rawFilePath,\n\t'CurrentBalance' as AmountColumn,\n\t2 as FirstRows\nFrom datefield\nUnion all\nSelect \n\t2 as FileHandle,\n\tPD as PostDate,\n\tPD_ID AS PostDate_ID  ,\n\t'formatF_7_txn_chr.txt' as  FormatFileName,\n \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as FormatFilePath,\n \t'_rawTXNS_CHGS' as TableName,\n \tConcat('Transaction-Charge__',month(PD),'.',day(PD),'.',year(PD),'.txt') as RawFileName,\n  \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as rawFilePath,\n\t'TxnAmount' as AmountColumn,\n\t2 as FirstRows\nFrom datefield;"
+						}
+					]
+				}
+			},
+			{
+				"name": "Lookup for TxnChar",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Insert to cfgSubmissionInfo",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "Select *From [dbo].[cfgSubmissionInfo] where [FileHandle]=2",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SqlServerTable1",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": true
+				}
+			},
+			{
+				"name": "Stored procedure1_copy1",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Lookup for TxnChar",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_BULK]",
+					"storedProcedureParameters": {
+						"AmountColumn": {
+							"value": {
+								"value": "@activity('Lookup for TxnChar').output.firstRow.AmountColumn",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Check_Existence": {
+							"value": {
+								"value": "@activity('Lookup for TxnChar').output.firstRow.Check_Existence",
+								"type": "Expression"
+							},
+							"type": "Byte[]"
+						},
+						"ClearTable": {
+							"value": {
+								"value": "@activity('Lookup for TxnChar').output.firstRow.ClearTable",
+								"type": "Expression"
+							},
+							"type": "Byte[]"
+						},
+						"FileHandle": {
+							"value": {
+								"value": "@activity('Lookup for TxnChar').output.firstRow.ClearTable",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						},
+						"FirstRow": {
+							"value": {
+								"value": "@activity('Lookup for TxnChar').output.firstRow.FirstRows",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						},
+						"FormatFileName": {
+							"value": {
+								"value": "@activity('Lookup for TxnChar').output.firstRow.FormatFileName",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"FormatFilePath": {
+							"value": {
+								"value": "@activity('Lookup for TxnChar').output.firstRow.FormatFilePath",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"PostDate": {
+							"value": {
+								"value": "@string(activity('Lookup for TxnChar').output.firstRow.PostDate_ID)",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"RawFileName": {
+							"value": {
+								"value": "@activity('Lookup for TxnChar').output.firstRow.RawFileName",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"RawFilePath": {
+							"value": {
+								"value": "@activity('Lookup for TxnChar').output.firstRow.FilePath",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"RawTableName": {
+							"value": {
+								"value": "@activity('Lookup for TxnChar').output.firstRow.TableName",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
