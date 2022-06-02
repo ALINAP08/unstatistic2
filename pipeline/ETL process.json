@@ -1,0 +1,9 @@
+{
+	"name": "ETL process",
+	"properties": {
+		"folder": {
+			"name": "ETL"
+		},
+		"annotations": []
+	}
+}
