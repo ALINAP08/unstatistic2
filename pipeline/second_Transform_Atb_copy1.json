@@ -1,0 +1,322 @@
+{
+	"name": "second_Transform_Atb_copy1",
+	"properties": {
+		"description": "Transform Atb data ",
+		"activities": [
+			{
+				"name": "Insert to cvtTXNS_CHGS",
+				"description": "Use [dbo].[usp_ConvLoad_cvtTXNS_CHGS]",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_ConvLoad_cvtTXNS_CHGS]"
+				},
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Send mail about Fail 1",
+				"description": "Send mail about Fail Insert to  cvtTXNS_CHGS ",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Insert to cvtTXNS_CHGS",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+					"method": "POST",
+					"body": {
+						"message": "ETL process was FAILED. TXNS_CHGS data wasn't inserted to cvtTXNS_CHGS. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+						"dataFactoryName": "@{pipeline().DataFactory}",
+						"pipelineName": "@{pipeline().Pipeline}",
+						"receiver": "@{pipeline().parameters.receiver}"
+					}
+				}
+			},
+			{
+				"name": "Update Timelines from TXNS_CHGS",
+				"description": "Use usp_Update_All_Timelines  for update Timelines ",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Update Dictionaries from cvtTXNS_CHGS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_Update_All_Timelines]",
+					"storedProcedureParameters": {
+						"Tbl": {
+							"value": "cvtTXNS_CHGS",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Send mail about Fail 3",
+				"description": "Send mail about Fail update Timelines from TXNS_CHGS",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Update Timelines from TXNS_CHGS",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+					"method": "POST",
+					"body": {
+						"message": "ETL process was FAILED.  Updating Timelines from TXNS_CHGS was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+						"dataFactoryName": "@{pipeline().DataFactory}",
+						"pipelineName": "@{pipeline().Pipeline}",
+						"receiver": "@{pipeline().parameters.receiver}"
+					}
+				}
+			},
+			{
+				"name": "Update Dictionaries from cvtTXNS_CHGS",
+				"description": "Use [dbo].[usp_Update_All_Dictionaries] for update Dictionaries from cvtTXNS_CHGS",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Insert to cvtTXNS_CHGS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_Update_All_Dictionaries]",
+					"storedProcedureParameters": {
+						"Tbl": {
+							"value": "cvtTXNS_CHGS",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Send mail about Fail 2",
+				"description": "Send mail about Fail update Dictionaries  from TXNS_CHGS",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Update Dictionaries from cvtTXNS_CHGS",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+					"method": "POST",
+					"body": {
+						"message": "ETL process was FAILED.   Updating Dictionaries from TXNS_CHGS was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+						"dataFactoryName": "@{pipeline().DataFactory}",
+						"pipelineName": "@{pipeline().Pipeline}",
+						"receiver": "@{pipeline().parameters.receiver}"
+					}
+				}
+			},
+			{
+				"name": "Update cvtTXNS_CHGS",
+				"description": "Update cvtTXNS_CHGS according to dictionaries use [dbo].[usp_ConvModify_TXNS_CHGS]",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Update Timelines from TXNS_CHGS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_ConvModify_TXNS_CHGS]"
+				},
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Send mail about Fail 8",
+				"description": "Send mail about Fail Create tblTXNS_CHSS use [dbo].[usp_Deploy_TXNS_CHSS]\nand switch from cvtTXNS_CHSS",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Create tblTXNS_CHGS and switch from cvtTXNS_CHGS",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+					"method": "POST",
+					"body": {
+						"message": "ETL process was FAILED.  Creating tblTXNS_CHSS was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+						"dataFactoryName": "@{pipeline().DataFactory}",
+						"pipelineName": "@{pipeline().Pipeline}",
+						"receiver": "@{pipeline().parameters.receiver}"
+					}
+				}
+			},
+			{
+				"name": "Create tblTXNS_CHGS and switch from cvtTXNS_CHGS",
+				"description": "Create tblTXNS_CHGS and switch from cvtTXNS_CHGS use [dbo].[usp_Deploy_TXNS_CHSS]",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Update cvtTXNS_CHGS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_Deploy_TXNS_CHSS]"
+				},
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Send mail about Fail 4",
+				"description": "Send mail about Fail update cvtTXNS_CHGS",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Update cvtTXNS_CHGS",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+					"method": "POST",
+					"body": {
+						"message": "ETL process was FAILED.  Updating cvtTXNS_CHGS was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+						"dataFactoryName": "@{pipeline().DataFactory}",
+						"pipelineName": "@{pipeline().Pipeline}",
+						"receiver": "@{pipeline().parameters.receiver}"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"receiver": {
+				"type": "string",
+				"defaultValue": "alina_parkhomenko@epam.com"
+			},
+			"TBL": {
+				"type": "string",
+				"defaultValue": "cvtTXNS_CHGS"
+			}
+		},
+		"folder": {
+			"name": "ETL"
+		},
+		"annotations": []
+	}
+}
