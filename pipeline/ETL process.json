@@ -1,6 +1,21 @@
 {
 	"name": "ETL process",
 	"properties": {
+		"activities": [
+			{
+				"name": "Execute Pipeline Bulk Insert",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "first_Bulk_insert",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
 		"folder": {
 			"name": "ETL"
 		},
