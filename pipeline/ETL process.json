@@ -49,7 +49,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "second_Transform_Atb",
+						"referenceName": "third_Transform_TXNS_CHGS",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
