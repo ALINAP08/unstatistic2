@@ -26,7 +26,7 @@
 			},
 			{
 				"name": "Send mail about Fail 1",
-				"description": "Send mail about Fail Insert to cvt Table",
+				"description": "Send mail about Fail Insert to cvtATB",
 				"type": "WebActivity",
 				"dependsOn": [
 					{
