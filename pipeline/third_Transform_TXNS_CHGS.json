@@ -1,7 +1,7 @@
 {
-	"name": "second_Transform_Atb_copy1",
+	"name": "third_Transform_TXNS_CHGS",
 	"properties": {
-		"description": "Transform Atb data ",
+		"description": "Transform TXNS_CHGS data ",
 		"activities": [
 			{
 				"name": "Insert to cvtTXNS_CHGS",
