@@ -184,6 +184,242 @@
 						"receiver": "@{pipeline().parameters.receiver}"
 					}
 				}
+			},
+			{
+				"name": "Update cvtATB",
+				"description": "Update cvtATB according to dictionaries \nuse [dbo].[usp_ConvModify_ATB]",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Update Timelines from ATB",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_ConvModify_ATB]"
+				},
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Send mail about Fail 4",
+				"description": "Send mail about Fail update cvtATB",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Update cvtATB",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+					"method": "POST",
+					"body": {
+						"message": "ETL process was FAILED.  Updating cvtATB was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+						"dataFactoryName": "@{pipeline().DataFactory}",
+						"pipelineName": "@{pipeline().Pipeline}",
+						"receiver": "@{pipeline().parameters.receiver}"
+					}
+				}
+			},
+			{
+				"name": "Update RetainZero in cvtATB",
+				"description": "Update RetainZero in cvtATB use [dbo].[usp_Dimension_Retain_Zero]",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Update cvtATB",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_Dimension_Retain_Zero]"
+				},
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Send mail about Fail 5",
+				"description": "Send mail about Fail update RetainZero \n in cvtATB",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Update RetainZero in cvtATB",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+					"method": "POST",
+					"body": {
+						"message": "ETL process was FAILED.  Updating RetainZero in cvtATB was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+						"dataFactoryName": "@{pipeline().DataFactory}",
+						"pipelineName": "@{pipeline().Pipeline}",
+						"receiver": "@{pipeline().parameters.receiver}"
+					}
+				}
+			},
+			{
+				"name": "Update RetainZero in cvtATB step2",
+				"description": "Update RetainZero in cvtATB use  [dbo].[usp_Retain_Zero] for CurrentBalance=0 ",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Update RetainZero in cvtATB",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_Retain_Zero]"
+				},
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Send mail about Fail 6",
+				"description": "Send mail about Fail update RetainZero for CurrentBalance=0 ",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Update RetainZero in cvtATB step2",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+					"method": "POST",
+					"body": {
+						"message": "ETL process was FAILED.  Updating RetainZero in cvtATB was FAILED for CurrentBalance=0 . This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+						"dataFactoryName": "@{pipeline().DataFactory}",
+						"pipelineName": "@{pipeline().Pipeline}",
+						"receiver": "@{pipeline().parameters.receiver}"
+					}
+				}
+			},
+			{
+				"name": "Update Age by Dates in cvtATB",
+				"description": "Update Age by Dates in cvtATB use  [dbo].[usp_UpdateAge_ATB]",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Update RetainZero in cvtATB step2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_UpdateAge_ATB]"
+				},
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Send mail about Fail 7",
+				"description": "Send mail about Fail update  Age by Dates in cvtATB ",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Update Age by Dates in cvtATB",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+					"method": "POST",
+					"body": {
+						"message": "ETL process was FAILED.  Updating  Age by Dates in cvtATB was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+						"dataFactoryName": "@{pipeline().DataFactory}",
+						"pipelineName": "@{pipeline().Pipeline}",
+						"receiver": "@{pipeline().parameters.receiver}"
+					}
+				}
 			}
 		],
 		"parameters": {
