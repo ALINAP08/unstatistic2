@@ -34,6 +34,26 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "Execute Pipeline Transform TXNS_CHGS",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Pipeline Bulk Insert",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "second_Transform_Atb",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"folder": {
