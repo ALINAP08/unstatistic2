@@ -13,6 +13,12 @@
 		},
 		"unstatisticuploadapp_connectionString": {
 			"value": ""
+		},
+		"AzureSqlDatabase_keyvault_properties_typeProperties_connectionString_secretName": {
+			"value": "unstatisticserverapark-key-connection"
+		},
+		"unstatistic_key_properties_typeProperties_baseUrl": {
+			"value": "https://unstatistickeyvault.vault.azure.net/"
 		}
 	}
 }

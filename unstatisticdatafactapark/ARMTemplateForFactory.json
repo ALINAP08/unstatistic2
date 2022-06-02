@@ -18,6 +18,14 @@
 		"unstatisticuploadapp_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'unstatisticuploadapp'"
+		},
+		"AzureSqlDatabase_keyvault_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "unstatisticserverapark-key-connection"
+		},
+		"unstatistic_key_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://unstatistickeyvault.vault.azure.net/"
 		}
 	},
 	"variables": {
@@ -503,6 +511,652 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SourceDataset_ov9')]",
 				"[concat(variables('factoryId'), '/datasets/DestinationDataset_ov9')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/first_Bulk_insert')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Bulk insert for Atb",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Lookup for Atb",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_BULK]",
+							"storedProcedureParameters": {
+								"AmountColumn": {
+									"value": {
+										"value": "@activity('Lookup for Atb').output.firstRow.AmountColumn",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"Check_Existence": {
+									"value": {
+										"value": "@activity('Lookup for Atb').output.firstRow.Check_Existence",
+										"type": "Expression"
+									},
+									"type": "Byte[]"
+								},
+								"ClearTable": {
+									"value": {
+										"value": "@activity('Lookup for Atb').output.firstRow.ClearTable",
+										"type": "Expression"
+									},
+									"type": "Byte[]"
+								},
+								"FileHandle": {
+									"value": {
+										"value": "@activity('Lookup for Atb').output.firstRow.ClearTable",
+										"type": "Expression"
+									},
+									"type": "Int32"
+								},
+								"FirstRow": {
+									"value": {
+										"value": "@activity('Lookup for Atb').output.firstRow.FirstRows",
+										"type": "Expression"
+									},
+									"type": "Int32"
+								},
+								"FormatFileName": {
+									"value": {
+										"value": "@activity('Lookup for Atb').output.firstRow.FormatFileName",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"FormatFilePath": {
+									"value": {
+										"value": "@activity('Lookup for Atb').output.firstRow.FormatFilePath",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"PostDate": {
+									"value": {
+										"value": "@string(activity('Lookup for Atb').output.firstRow.PostDate_ID)",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"RawFileName": {
+									"value": {
+										"value": "@activity('Lookup for Atb').output.firstRow.RawFileName",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"RawFilePath": {
+									"value": {
+										"value": "@activity('Lookup for Atb').output.firstRow.FilePath",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"RawTableName": {
+									"value": {
+										"value": "@activity('Lookup for Atb').output.firstRow.TableName",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Lookup for Atb",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Send mail about Successed 1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "Select *From [dbo].[cfgSubmissionInfo] where [FileHandle]=1",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SqlServerTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": true
+						}
+					},
+					{
+						"name": "Insert to cfgSubmissionInfo",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "With datefield as (\nSelect getdate()-1 as PD,\n\tFORMAT((getdate()-1), 'yyyyMMdd', 'en-us') as PD_ID\n\t)\n\nInsert into [dbo].[cfgSubmissionInfo] ( \n\t\t[FileHandle]\n      \t,[PostDate]\n      \t,[PostDate_ID]\n      \t,[FormatFileName]\n      \t,[FormatFilePath]\n\t\t,[TableName]\n\t\t,[RawFileName]\n\t\t,[FilePath]\n\t\t,[AmountColumn]\n\t\t,[FirstRows]\n    )\n\nSelect \n\t1 as FileHandle,\n\tPD as PostDate,\n\tPD_ID AS PostDate_ID  ,\n \t'formatF_7.txt' as  FormatFileName,\n \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as FormatFilePath,\n \t'_rawATB' as TableName,\n \tConcat('Account_',month(PD),'.',day(PD),'.',year(PD),'.txt') as RawFileName,\n\t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as rawFilePath,\n\t'CurrentBalance' as AmountColumn,\n\t2 as FirstRows\nFrom datefield\nUnion all\nSelect \n\t2 as FileHandle,\n\tPD as PostDate,\n\tPD_ID AS PostDate_ID  ,\n\t'formatF_7_txn_chr.txt' as  FormatFileName,\n \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as FormatFilePath,\n \t'_rawTXNS_CHGS' as TableName,\n \tConcat('Transaction-Charge__',month(PD),'.',day(PD),'.',year(PD),'.txt') as RawFileName,\n  \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as rawFilePath,\n\t'TxnAmount' as AmountColumn,\n\t2 as FirstRows\nFrom datefield;"
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup for TxnChar",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Send mail about Successed 1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "Select *From [dbo].[cfgSubmissionInfo] where [FileHandle]=2",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SqlServerTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": true
+						}
+					},
+					{
+						"name": "Bulk insert for TxnChar",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Lookup for TxnChar",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_BULK]",
+							"storedProcedureParameters": {
+								"AmountColumn": {
+									"value": {
+										"value": "@activity('Lookup for TxnChar').output.firstRow.AmountColumn",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"Check_Existence": {
+									"value": {
+										"value": "@activity('Lookup for TxnChar').output.firstRow.Check_Existence",
+										"type": "Expression"
+									},
+									"type": "Byte[]"
+								},
+								"ClearTable": {
+									"value": {
+										"value": "@activity('Lookup for TxnChar').output.firstRow.ClearTable",
+										"type": "Expression"
+									},
+									"type": "Byte[]"
+								},
+								"FileHandle": {
+									"value": {
+										"value": "@activity('Lookup for TxnChar').output.firstRow.ClearTable",
+										"type": "Expression"
+									},
+									"type": "Int32"
+								},
+								"FirstRow": {
+									"value": {
+										"value": "@activity('Lookup for TxnChar').output.firstRow.FirstRows",
+										"type": "Expression"
+									},
+									"type": "Int32"
+								},
+								"FormatFileName": {
+									"value": {
+										"value": "@activity('Lookup for TxnChar').output.firstRow.FormatFileName",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"FormatFilePath": {
+									"value": {
+										"value": "@activity('Lookup for TxnChar').output.firstRow.FormatFilePath",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"PostDate": {
+									"value": {
+										"value": "@string(activity('Lookup for TxnChar').output.firstRow.PostDate_ID)",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"RawFileName": {
+									"value": {
+										"value": "@activity('Lookup for TxnChar').output.firstRow.RawFileName",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"RawFilePath": {
+									"value": {
+										"value": "@activity('Lookup for TxnChar').output.firstRow.FilePath",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"RawTableName": {
+									"value": {
+										"value": "@activity('Lookup for TxnChar').output.firstRow.TableName",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Send mail about Successed 1",
+						"description": "Send mail about Successed Insert to cfgSubmissionInfo and started ETL Process.",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Insert to cfgSubmissionInfo",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "ETL Process was started. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Send mail about Fail 1",
+						"description": "Send mail about Fail Insert to cfgSubmissionInfo",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Insert to cfgSubmissionInfo",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "This object was added earlier. ETL process didn't start. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Send mail about Fail 2",
+						"description": "Send mail about \"Fail\" Bulk insert procedure for Atb data",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Bulk insert for Atb",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "Bulk insert procedure for Atb data was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Send mail about Fail 3",
+						"description": "Send mail about \"Fail\" Bulk insert procedure for TxnChar data",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Bulk insert for TxnChar",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "Bulk insert procedure for TxnChar data was FAILED.  This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"receiver": {
+						"type": "string",
+						"defaultValue": "alina_parkhomenko@epam.com"
+					}
+				},
+				"folder": {
+					"name": "ETL"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/localsqldb')]",
+				"[concat(variables('factoryId'), '/datasets/SqlServerTable1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/orch-unstatic-extract')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "SP Create",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[pipelineExecutiHistiry_Create]",
+							"storedProcedureParameters": {
+								"PipelineName": {
+									"value": {
+										"value": "@pipeline().Pipeline",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"PipelineRunID": {
+									"value": {
+										"value": "@pipeline().RunId",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "unstatisticdbaparklinkedservice",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "SP Update",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "unstatic-extract_lookup",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[pipelineExecutiHistiry_Update]",
+							"storedProcedureParameters": {
+								"Description": {
+									"value": {
+										"value": "@variables('PipelineExecDescription')",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"PipelineName": {
+									"value": {
+										"value": "@pipeline().Pipeline",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"PipelineRunID": {
+									"value": {
+										"value": "@pipeline().RunId",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"Status": {
+									"value": {
+										"value": "@variables('PipelineExecStatus')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "unstatisticdbaparklinkedservice",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "unstatic-extract",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "SP Create",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "unstatic-extract",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "unstatic-extract_lookup",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "unstatic-extract",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "unstatic-extract_lookup",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Fail unstatic-extract",
+						"type": "Fail",
+						"dependsOn": [
+							{
+								"activity": "unstatic-extract",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"message": "Pipeline unstatic-extract Failed",
+							"errorCode": "101"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"PipelineExecDescription": {
+						"type": "String",
+						"defaultValue": "succeed"
+					},
+					"PipelineExecStatus": {
+						"type": "String",
+						"defaultValue": "succeed"
+					}
+				},
+				"folder": {
+					"name": "unstatistic"
+				},
+				"annotations": [
+					"extract"
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/unstatisticdbaparklinkedservice')]",
+				"[concat(variables('factoryId'), '/pipelines/unstatic-extract')]",
+				"[concat(variables('factoryId'), '/pipelines/unstatic-extract_lookup')]"
 			]
 		},
 		{
@@ -1301,6 +1955,47 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "unstatisticdbaparklinkedservice",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Code",
+						"type": "varchar"
+					},
+					{
+						"name": "Description",
+						"type": "varchar"
+					},
+					{
+						"name": "InsertDateTime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "dicCoder"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/unstatisticdbaparklinkedservice')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DestinationDataset_ov9')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1352,6 +2047,83 @@
 						"value": "@dataset().cw_table",
 						"type": "Expression"
 					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/localsqldb')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SqlServerTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "FileHandle",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "PostDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "PostDate_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FormatFileName",
+						"type": "varchar"
+					},
+					{
+						"name": "FormatFilePath",
+						"type": "varchar"
+					},
+					{
+						"name": "TableName",
+						"type": "varchar"
+					},
+					{
+						"name": "RawFileName",
+						"type": "varchar"
+					},
+					{
+						"name": "FilePath",
+						"type": "varchar"
+					},
+					{
+						"name": "AmountColumn",
+						"type": "varchar"
+					},
+					{
+						"name": "FirstRows",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "ClearTable",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "Check_Existence",
+						"type": "tinyint",
+						"precision": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "cfgSubmissionInfo"
 				}
 			},
 			"dependsOn": [
@@ -1603,6 +2375,28 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase_keyvault')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "unstatistic_key",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureSqlDatabase_keyvault_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/unstatistic_key')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/localsqldb')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -1620,6 +2414,19 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/localdb')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/unstatistic_key')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('unstatistic_key_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/unstatisticdbaparklinkedservice')]",
@@ -1691,175 +2498,6 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/orch-unstatic-extract')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "SP Create",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[pipelineExecutiHistiry_Create]",
-							"storedProcedureParameters": {
-								"PipelineName": {
-									"value": {
-										"value": "@pipeline().Pipeline",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"PipelineRunID": {
-									"value": {
-										"value": "@pipeline().RunId",
-										"type": "Expression"
-									},
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "unstatisticdbaparklinkedservice",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "SP Update",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "unstatic-extract_lookup",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[pipelineExecutiHistiry_Update]",
-							"storedProcedureParameters": {
-								"Description": {
-									"value": {
-										"value": "@variables('PipelineExecDescription')",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"PipelineName": {
-									"value": {
-										"value": "@pipeline().Pipeline",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"PipelineRunID": {
-									"value": {
-										"value": "@pipeline().RunId",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"Status": {
-									"value": {
-										"value": "@variables('PipelineExecStatus')",
-										"type": "Expression"
-									},
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "unstatisticdbaparklinkedservice",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "unstatic-extract",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SP Create",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "unstatic-extract",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "unstatic-extract_lookup",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "unstatic-extract",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "unstatic-extract_lookup",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"variables": {
-					"PipelineExecDescription": {
-						"type": "String",
-						"defaultValue": "succeed"
-					},
-					"PipelineExecStatus": {
-						"type": "String",
-						"defaultValue": "succeed"
-					}
-				},
-				"folder": {
-					"name": "unstatistic"
-				},
-				"annotations": [
-					"extract"
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/unstatisticdbaparklinkedservice')]",
-				"[concat(variables('factoryId'), '/pipelines/unstatic-extract')]",
-				"[concat(variables('factoryId'), '/pipelines/unstatic-extract_lookup')]"
-			]
 		}
 	]
 }
