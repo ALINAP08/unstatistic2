@@ -423,7 +423,7 @@
 			},
 			{
 				"name": "Create tblATB and switch from cvtATB",
-				"description": "Create tblATB and switch from cvtATB use ",
+				"description": "Create tblATB and switch from cvtATB use [dbo].[usp_Deploy_ATB]",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
