@@ -152,7 +152,7 @@
 				}
 			},
 			{
-				"name": "Stored procedure1",
+				"name": "Backup after loading",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
