@@ -42,7 +42,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "CREATE TABLE #Check_atb_files (column_1 VARCHAR(MAX) NOT NULL)\nDeclare @filename varchar(50)\nSelect @filename=concat('Transaction-Charge__',month(Getdate()-1),'.',day(Getdate()-1),'.',year(Getdate()-1),'.txt')\nprint @filename\nexec('BULK Insert #Check_atb_files From ''C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7\\'+@filename+'''\n\t\tWith (FIRSTROW =2,  rowterminator = ''\\n'');');\n\n\nSelect*from  #Check_atb_files\n",
+						"sqlReaderQuery": "CREATE TABLE #Check_txn_char_files (column_1 VARCHAR(MAX) NOT NULL)\nDeclare @filenametxn varchar(50)\nSelect @filenametxn=concat('Transaction-Charge__',month(Getdate()-1),'.',day(Getdate()-1),'.',year(Getdate()-1),'.txt')\nprint @filenametxn\nexec('BULK Insert #Check_txn_char_files From ''C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7\\'+@filenametxn+'''\n\t\tWith (FIRSTROW =2,  rowterminator = ''\\n'');');\n\n\nSelect*from  #Check_txn_char_files\n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
