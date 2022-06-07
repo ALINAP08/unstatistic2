@@ -84,6 +84,12 @@
 				}
 			}
 		],
+		"parameters": {
+			"receiver": {
+				"type": "string",
+				"defaultValue": "alina_parkhomenko@epam.com"
+			}
+		},
 		"folder": {
 			"name": "ETL"
 		},
