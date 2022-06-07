@@ -3,9 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Script1",
-				"description": "",
-				"type": "Script",
+				"name": "Lookup1",
+				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -15,17 +14,17 @@
 					"secureInput": false
 				},
 				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "localsqldb",
-					"type": "LinkedServiceReference"
-				},
 				"typeProperties": {
-					"scripts": [
-						{
-							"type": "Query",
-							"text": "CREATE TABLE #Count_row_tab2 (column_1 VARCHAR(MAX) NOT NULL)\n\nexec('BULK Insert #Count_row_tab From ''C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7\\Account_5.31.2022.txt''\n\t\tWith (FIRSTROW =2,  rowterminator = ''\\n'');');\n\n\t\tSelect*from  #Count_row_tab2"
-						}
-					]
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "CREATE TABLE #Count_row_tab2 (column_1 VARCHAR(MAX) NOT NULL)\n\nexec('BULK Insert #Count_row_tab2 From ''C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7\\Account_5.31.2022.txt''\n\t\tWith (FIRSTROW =2,  rowterminator = ''\\n'');');\n\n\t\tSelect*from  #Count_row_tab2",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SqlServerTable1",
+						"type": "DatasetReference"
+					}
 				}
 			}
 		],
