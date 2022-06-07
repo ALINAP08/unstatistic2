@@ -58,12 +58,6 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Check ATB file",
-						"dependencyConditions": [
-							"Failed"
-						]
-					},
-					{
 						"activity": "Check TxnChar file",
 						"dependencyConditions": [
 							"Failed"
