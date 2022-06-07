@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup1",
+				"name": "Check ATB file",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -17,13 +17,75 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "CREATE TABLE #Count_row_tab2 (column_1 VARCHAR(MAX) NOT NULL)\n\nexec('BULK Insert #Count_row_tab2 From ''C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7\\Account_5.30.2022.txt''\n\t\tWith (FIRSTROW =2,  rowterminator = ''\\n'');');\n\n\t\tSelect*from  #Count_row_tab2",
+						"sqlReaderQuery": "CREATE TABLE #Check_atb_files (column_1 VARCHAR(MAX) NOT NULL)\nDeclare @filename varchar(50)\nSelect @filename=concat('Account_',month(Getdate()-1),'.',day(Getdate()-1),'.',year(Getdate()-1),'.txt')\nprint @filename\nexec('BULK Insert #Check_atb_files From ''C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7\\'+@filename+'''\n\t\tWith (FIRSTROW =2,  rowterminator = ''\\n'');');\n\n\nSelect*from  #Check_atb_files\n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
 						"referenceName": "SqlServerTable1",
 						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Check TxnChar file",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "CREATE TABLE #Check_atb_files (column_1 VARCHAR(MAX) NOT NULL)\nDeclare @filename varchar(50)\nSelect @filename=concat('Account_',month(Getdate()-1),'.',day(Getdate()-1),'.',year(Getdate()-1),'.txt')\nprint @filename\nexec('BULK Insert #Check_atb_files From ''C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7\\'+@filename+'''\n\t\tWith (FIRSTROW =2,  rowterminator = ''\\n'');');\n\n\nSelect*from  #Check_atb_files\n",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SqlServerTable1",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Send mail about Fail 1",
+				"description": "Send mail about absent files on the folder",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Check ATB file",
+						"dependencyConditions": [
+							"Failed"
+						]
+					},
+					{
+						"activity": "Check TxnChar file",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+					"method": "POST",
+					"body": {
+						"message": "Absent FILES on the folder. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+						"dataFactoryName": "@{pipeline().DataFactory}",
+						"pipelineName": "@{pipeline().Pipeline}",
+						"receiver": "@{pipeline().parameters.receiver}"
 					}
 				}
 			}
