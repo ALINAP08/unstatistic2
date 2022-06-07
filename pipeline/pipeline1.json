@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "CREATE TABLE #Count_row_tab2 (column_1 VARCHAR(MAX) NOT NULL)\n\nexec('BULK Insert #Count_row_tab2 From ''C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7\\Account_5.31.2022.txt''\n\t\tWith (FIRSTROW =2,  rowterminator = ''\\n'');');\n\n\t\tSelect*from  #Count_row_tab2",
+						"sqlReaderQuery": "CREATE TABLE #Count_row_tab2 (column_1 VARCHAR(MAX) NOT NULL)\n\nexec('BULK Insert #Count_row_tab2 From ''C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7\\Account_5.30.2022.txt''\n\t\tWith (FIRSTROW =2,  rowterminator = ''\\n'');');\n\n\t\tSelect*from  #Count_row_tab2",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
