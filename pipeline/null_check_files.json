@@ -133,15 +133,15 @@
 				"type": "Wait",
 				"dependsOn": [
 					{
-						"activity": "Send mail about Fail 1",
+						"activity": "Check ATB file",
 						"dependencyConditions": [
-							"Succeeded"
+							"Failed"
 						]
 					},
 					{
-						"activity": "Send mail about Fail 1_copy1",
+						"activity": "Check TxnChar file",
 						"dependencyConditions": [
-							"Succeeded"
+							"Failed"
 						]
 					}
 				],
