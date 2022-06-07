@@ -5,14 +5,7 @@
 			{
 				"name": "Check ATB file",
 				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "Wait for files",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -37,14 +30,7 @@
 			{
 				"name": "Check TxnChar file",
 				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "Wait for files",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -64,90 +50,6 @@
 						"referenceName": "SqlServerTable1",
 						"type": "DatasetReference"
 					}
-				}
-			},
-			{
-				"name": "Send mail about Fail 1",
-				"description": "Send mail about absent files on the folder",
-				"type": "WebActivity",
-				"dependsOn": [
-					{
-						"activity": "Check TxnChar file",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
-					"method": "POST",
-					"body": {
-						"message": "Absent FILES on the folder. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
-						"dataFactoryName": "@{pipeline().DataFactory}",
-						"pipelineName": "@{pipeline().Pipeline}",
-						"receiver": "@{pipeline().parameters.receiver}"
-					}
-				}
-			},
-			{
-				"name": "Send mail about Fail 1_copy1",
-				"description": "Send mail about absent files on the folder",
-				"type": "WebActivity",
-				"dependsOn": [
-					{
-						"activity": "Check ATB file",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
-					"method": "POST",
-					"body": {
-						"message": "Absent FILES on the folder. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
-						"dataFactoryName": "@{pipeline().DataFactory}",
-						"pipelineName": "@{pipeline().Pipeline}",
-						"receiver": "@{pipeline().parameters.receiver}"
-					}
-				}
-			},
-			{
-				"name": "Wait for files",
-				"type": "Wait",
-				"dependsOn": [
-					{
-						"activity": "Check ATB file",
-						"dependencyConditions": [
-							"Failed"
-						]
-					},
-					{
-						"activity": "Check TxnChar file",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"waitTimeInSeconds": 30
 				}
 			}
 		],
