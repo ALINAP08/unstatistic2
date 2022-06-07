@@ -62,12 +62,6 @@
 						"dependencyConditions": [
 							"Failed"
 						]
-					},
-					{
-						"activity": "Check ATB file",
-						"dependencyConditions": [
-							"Failed"
-						]
 					}
 				],
 				"policy": {
