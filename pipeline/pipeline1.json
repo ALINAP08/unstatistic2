@@ -1,0 +1,37 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Script1",
+				"description": "",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE TABLE #Count_row_tab2 (column_1 VARCHAR(MAX) NOT NULL)\n\nexec('BULK Insert #Count_row_tab From C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7\\Account_6.1.2022.txt \n\t\tWith (FIRSTROW =2,  rowterminator = ''\\n'');');\n\n\t\tSelect*from  #Count_row_tab2"
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "ETL"
+		},
+		"annotations": []
+	}
+}
