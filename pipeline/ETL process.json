@@ -63,7 +63,7 @@
 				}
 			},
 			{
-				"name": "Script1",
+				"name": "Cleaning cfgSubmissionInfo table",
 				"type": "Script",
 				"dependsOn": [
 					{
@@ -106,7 +106,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Script1",
+						"activity": "Cleaning cfgSubmissionInfo table",
 						"dependencyConditions": [
 							"Succeeded"
 						]
