@@ -178,7 +178,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "[dbo].[sp_getColumnMappingv2]",
+						"sqlReaderStoredProcedureName": "[dbo].[sp_getColumnMapping]",
 						"storedProcedureParameters": {
 							"schema_name": {
 								"type": "String",
