@@ -209,9 +209,6 @@
 				"defaultValue": "succeed"
 			}
 		},
-		"folder": {
-			"name": "unstatistic"
-		},
 		"annotations": [
 			"extract"
 		]
