@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "unstatisticdatafactapark"
 		},
+		"FileServer1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FileServer1'"
+		},
 		"localsqldb_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'localsqldb'"
@@ -23,6 +27,14 @@
 			"type": "string",
 			"defaultValue": "unstatisticserverapark-key-connection"
 		},
+		"FileServer1_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7"
+		},
+		"FileServer1_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "unstatisticadminapark"
+		},
 		"unstatistic_key_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://unstatistickeyvault.vault.azure.net/"
@@ -32,6 +44,316 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ETL process')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute Pipeline Bulk Insert",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Execute Files on the folder",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "first_Bulk_insert",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Execute Pipeline Transform ATB",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Execute Pipeline Bulk Insert",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "second_Transform_Atb",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Execute Pipeline Transform TXNS_CHGS",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Execute Pipeline Bulk Insert",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "third_Transform_TXNS_CHGS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Cleaning cfgSubmissionInfo table",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "Execute Pipeline Transform ATB",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Execute Pipeline Transform TXNS_CHGS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "Delete from [dbo].[cfgSubmissionInfo] "
+								}
+							]
+						}
+					},
+					{
+						"name": "Send mail about Successed 1",
+						"description": "Send mail about Successed ETL Process.",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Cleaning cfgSubmissionInfo table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "ETL Process was Succeed.  This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Send mail about Failed 2",
+						"description": "Send mail about Failed ETL Process for TXNS_CHGS.",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Execute Pipeline Transform TXNS_CHGS",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"value": "{\"message\":ETL Process was Failed for TXNS_CHGS. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.\",\"dataFactoryName\":\"@{pipeline().DataFactory}\",\"pipelineName\":\"@{pipeline().Pipeline}\",\"receiver\":\"@{pipeline().parameters.receiver}\"}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Backup after loading",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Send mail about Successed 1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[sp_backup]",
+							"storedProcedureParameters": {
+								"Backup_path": {
+									"value": "C:\\Program Files\\Microsoft SQL Server\\MSSQL15.MSSQLSERVER\\MSSQL\\Backup\\",
+									"type": "String"
+								},
+								"bakup_file": {
+									"value": ",bak_1.bak,bak_2.bak,bak_3.bak",
+									"type": "String"
+								},
+								"DB_name": {
+									"value": "mfv40_AlinaParkhormenko",
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Execute Files on the folder",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "null_check_files",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Send mail about Failed",
+						"description": "Send mail about absent files on the folder",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Execute Files on the folder",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "Absent FILES on the folder. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Send mail about Failed 3",
+						"description": "Send mail about Failed ETL Process. for ATB",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Execute Pipeline Transform ATB",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"value": "{\"message\":ETL Process was Failed for ATB. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.\",\"dataFactoryName\":\"@{pipeline().DataFactory}\",\"pipelineName\":\"@{pipeline().Pipeline}\",\"receiver\":\"@{pipeline().parameters.receiver}\"}",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"receiver": {
+						"type": "string",
+						"defaultValue": "alina_parkhomenko@epam.com"
+					}
+				},
+				"folder": {
+					"name": "ETL"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/first_Bulk_insert')]",
+				"[concat(variables('factoryId'), '/pipelines/second_Transform_Atb')]",
+				"[concat(variables('factoryId'), '/pipelines/third_Transform_TXNS_CHGS')]",
+				"[concat(variables('factoryId'), '/linkedServices/localsqldb')]",
+				"[concat(variables('factoryId'), '/pipelines/null_check_files')]"
+			]
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/First_Pipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -678,7 +1000,7 @@
 						"typeProperties": {
 							"scripts": [
 								{
-									"type": "Query",
+									"type": "NonQuery",
 									"text": "With datefield as (\nSelect getdate()-1 as PD,\n\tFORMAT((getdate()-1), 'yyyyMMdd', 'en-us') as PD_ID\n\t)\n\nInsert into [dbo].[cfgSubmissionInfo] ( \n\t\t[FileHandle]\n      \t,[PostDate]\n      \t,[PostDate_ID]\n      \t,[FormatFileName]\n      \t,[FormatFilePath]\n\t\t,[TableName]\n\t\t,[RawFileName]\n\t\t,[FilePath]\n\t\t,[AmountColumn]\n\t\t,[FirstRows]\n    )\n\nSelect \n\t1 as FileHandle,\n\tPD as PostDate,\n\tPD_ID AS PostDate_ID  ,\n \t'formatF_7.txt' as  FormatFileName,\n \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as FormatFilePath,\n \t'_rawATB' as TableName,\n \tConcat('Account_',month(PD),'.',day(PD),'.',year(PD),'.txt') as RawFileName,\n\t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as rawFilePath,\n\t'CurrentBalance' as AmountColumn,\n\t2 as FirstRows\nFrom datefield\nUnion all\nSelect \n\t2 as FileHandle,\n\tPD as PostDate,\n\tPD_ID AS PostDate_ID  ,\n\t'formatF_7_txn_chr.txt' as  FormatFileName,\n \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as FormatFilePath,\n \t'_rawTXNS_CHGS' as TableName,\n \tConcat('Transaction-Charge__',month(PD),'.',day(PD),'.',year(PD),'.txt') as RawFileName,\n  \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as rawFilePath,\n\t'TxnAmount' as AmountColumn,\n\t2 as FirstRows\nFrom datefield;"
 								}
 							]
@@ -974,6 +1296,78 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/null_check_files')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Check ATB file",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "CREATE TABLE #Check_atb_files (column_1 VARCHAR(MAX) NOT NULL)\nDeclare @filename varchar(50)\nSelect @filename=concat('Account_',month(Getdate()-1),'.',day(Getdate()-1),'.',year(Getdate()-1),'.txt')\nprint @filename\nexec('BULK Insert #Check_atb_files From ''C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7\\'+@filename+'''\n\t\tWith (FIRSTROW =2,  rowterminator = ''\\n'');');\n\n\nSelect*from  #Check_atb_files\n",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SqlServerTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "Check TxnChar file",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "CREATE TABLE #Check_txn_char_files (column_1 VARCHAR(MAX) NOT NULL)\nDeclare @filenametxn varchar(50)\nSelect @filenametxn=concat('Transaction-Charge__',month(Getdate()-1),'.',day(Getdate()-1),'.',year(Getdate()-1),'.txt')\nprint @filenametxn\nexec('BULK Insert #Check_txn_char_files From ''C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7\\'+@filenametxn+'''\n\t\tWith (FIRSTROW =2,  rowterminator = ''\\n'');');\n\n\nSelect*from  #Check_txn_char_files\n",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SqlServerTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "ETL"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SqlServerTable1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/orch-unstatic-extract')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1157,6 +1551,918 @@
 				"[concat(variables('factoryId'), '/linkedServices/unstatisticdbaparklinkedservice')]",
 				"[concat(variables('factoryId'), '/pipelines/unstatic-extract')]",
 				"[concat(variables('factoryId'), '/pipelines/unstatic-extract_lookup')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/second_Transform_Atb')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Transform Atb data ",
+				"activities": [
+					{
+						"name": "Insert to cvtATB",
+						"description": "Use [dbo].[usp_ConvLoad_cvtATB]",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_ConvLoad_cvtATB]"
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Send mail about Fail 1",
+						"description": "Send mail about Fail Insert to cvtATB",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Insert to cvtATB",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "ETL process was FAILED. ATB data wasn't inserted to cvt Table. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Update Timelines from ATB",
+						"description": "Use usp_Update_All_Timelines  for update Timelines dictionary",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Update Dictionaries from ATB",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_Update_All_Timelines]",
+							"storedProcedureParameters": {
+								"Tbl": {
+									"value": "cvtATB",
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Send mail about Fail 3",
+						"description": "Send mail about Fail update Timelines from ATB",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Update Timelines from ATB",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "ETL process was FAILED.  Updating Timelines from ATB was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Update Dictionaries from ATB",
+						"description": "Use [dbo].[usp_Update_All_Dictionaries] for update Dictionaries from ATB",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Insert to cvtATB",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_Update_All_Dictionaries]",
+							"storedProcedureParameters": {
+								"Tbl": {
+									"value": "cvtATB",
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Send mail about Fail 2",
+						"description": "Send mail about Fail update Dictionaries  from ATB",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Update Dictionaries from ATB",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "ETL process was FAILED.   Updating Dictionaries from ATB was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Update cvtATB",
+						"description": "Update cvtATB according to dictionaries \nuse [dbo].[usp_ConvModify_ATB]",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Update Timelines from ATB",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_ConvModify_ATB]"
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Send mail about Fail 4",
+						"description": "Send mail about Fail update cvtATB",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Update cvtATB",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "ETL process was FAILED.  Updating cvtATB was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Update RetainZero in cvtATB",
+						"description": "Update RetainZero in cvtATB use [dbo].[usp_Dimension_Retain_Zero]",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Update cvtATB",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_Dimension_Retain_Zero]"
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Send mail about Fail 5",
+						"description": "Send mail about Fail update RetainZero \n in cvtATB",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Update RetainZero in cvtATB",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "ETL process was FAILED.  Updating RetainZero in cvtATB was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Update RetainZero in cvtATB step2",
+						"description": "Update RetainZero in cvtATB use  [dbo].[usp_Retain_Zero] for CurrentBalance=0 ",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Update RetainZero in cvtATB",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_Retain_Zero]"
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Send mail about Fail 6",
+						"description": "Send mail about Fail update RetainZero for CurrentBalance=0 ",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Update RetainZero in cvtATB step2",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "ETL process was FAILED.  Updating RetainZero in cvtATB was FAILED for CurrentBalance=0 . This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Update Age by Dates in cvtATB",
+						"description": "Update Age by Dates in cvtATB use  [dbo].[usp_UpdateAge_ATB]",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Update RetainZero in cvtATB step2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_UpdateAge_ATB]"
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Send mail about Fail 7",
+						"description": "Send mail about Fail update  Age by Dates in cvtATB ",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Update Age by Dates in cvtATB",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "ETL process was FAILED.  Updating  Age by Dates in cvtATB was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Create tblATB and switch from cvtATB",
+						"description": "Create tblATB and switch from cvtATB use [dbo].[usp_Deploy_ATB]",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Update Age by Dates in cvtATB",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_Deploy_ATB]"
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Send mail about Fail 8",
+						"description": "Send mail about Fail Create tblATB and switch from cvtATB",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Create tblATB and switch from cvtATB",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "ETL process was FAILED.  Creating tblATB was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Create views for ATB",
+						"description": "Create or recreate views for ATB use [dbo].[usp_Recreate_vwATB]",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Create tblATB and switch from cvtATB",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_Recreate_vwATB]"
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Send mail about Fail 9",
+						"description": "Send mail about Fail Create views for ATB",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Create views for ATB",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "ETL process was FAILED.  Creating views for ATB was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"receiver": {
+						"type": "string",
+						"defaultValue": "alina_parkhomenko@epam.com"
+					},
+					"TBL": {
+						"type": "string",
+						"defaultValue": "cvtATB"
+					}
+				},
+				"folder": {
+					"name": "ETL"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/localsqldb')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/third_Transform_TXNS_CHGS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Transform TXNS_CHGS data ",
+				"activities": [
+					{
+						"name": "Insert to cvtTXNS_CHGS",
+						"description": "Use [dbo].[usp_ConvLoad_cvtTXNS_CHGS]",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_ConvLoad_cvtTXNS_CHGS]"
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Send mail about Fail 1",
+						"description": "Send mail about Fail Insert to  cvtTXNS_CHGS ",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Insert to cvtTXNS_CHGS",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "ETL process was FAILED. TXNS_CHGS data wasn't inserted to cvtTXNS_CHGS. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Update Timelines from TXNS_CHGS",
+						"description": "Use usp_Update_All_Timelines  for update Timelines ",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Update Dictionaries from cvtTXNS_CHGS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_Update_All_Timelines]",
+							"storedProcedureParameters": {
+								"Tbl": {
+									"value": "cvtTXNS_CHGS",
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Send mail about Fail 3",
+						"description": "Send mail about Fail update Timelines from TXNS_CHGS",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Update Timelines from TXNS_CHGS",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "ETL process was FAILED.  Updating Timelines from TXNS_CHGS was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Update Dictionaries from cvtTXNS_CHGS",
+						"description": "Use [dbo].[usp_Update_All_Dictionaries] for update Dictionaries from cvtTXNS_CHGS",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Insert to cvtTXNS_CHGS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_Update_All_Dictionaries]",
+							"storedProcedureParameters": {
+								"Tbl": {
+									"value": "cvtTXNS_CHGS",
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Send mail about Fail 2",
+						"description": "Send mail about Fail update Dictionaries  from TXNS_CHGS",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Update Dictionaries from cvtTXNS_CHGS",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "ETL process was FAILED.   Updating Dictionaries from TXNS_CHGS was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Update cvtTXNS_CHGS",
+						"description": "Update cvtTXNS_CHGS according to dictionaries use [dbo].[usp_ConvModify_TXNS_CHGS]",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Update Timelines from TXNS_CHGS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_ConvModify_TXNS_CHGS]"
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Send mail about Fail 8",
+						"description": "Send mail about Fail Create tblTXNS_CHSS use [dbo].[usp_Deploy_TXNS_CHSS]\nand switch from cvtTXNS_CHSS",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Create tblTXNS_CHGS and switch from cvtTXNS_CHGS",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "ETL process was FAILED.  Creating tblTXNS_CHSS was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					},
+					{
+						"name": "Create tblTXNS_CHGS and switch from cvtTXNS_CHGS",
+						"description": "Create tblTXNS_CHGS and switch from cvtTXNS_CHGS use [dbo].[usp_Deploy_TXNS_CHSS]",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Update cvtTXNS_CHGS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_Deploy_TXNS_CHSS]"
+						},
+						"linkedServiceName": {
+							"referenceName": "localsqldb",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Send mail about Fail 4",
+						"description": "Send mail about Fail update cvtTXNS_CHGS",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Update cvtTXNS_CHGS",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"message": "ETL process was FAILED.  Updating cvtTXNS_CHGS was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"receiver": "@{pipeline().parameters.receiver}"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"receiver": {
+						"type": "string",
+						"defaultValue": "alina_parkhomenko@epam.com"
+					},
+					"TBL": {
+						"type": "string",
+						"defaultValue": "cvtTXNS_CHGS"
+					}
+				},
+				"folder": {
+					"name": "ETL"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/localsqldb')]"
 			]
 		},
 		{
@@ -1518,6 +2824,235 @@
 				},
 				"folder": {
 					"name": "unstatistic"
+				},
+				"annotations": [
+					"extract"
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/src_csv_new')]",
+				"[concat(variables('factoryId'), '/datasets/dst_sql_test')]",
+				"[concat(variables('factoryId'), '/linkedServices/unstatisticdbaparklinkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/unstatic-extract_automap')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "copy to Sql",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Lookup1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "TRUNCATE TABLE [dbo].[test3];",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"value": "@json(activity('Lookup1').output.firstRow.json_output)",
+								"type": "Expression"
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "src_csv_new",
+								"type": "DatasetReference",
+								"parameters": {
+									"Container": "unstaticcontapp",
+									"FileName": "new.csv"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dst_sql_test",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "SP Create",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[pipelineExecutiHistiry_Create]",
+							"storedProcedureParameters": {
+								"PipelineName": {
+									"value": {
+										"value": "@pipeline().Pipeline",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"PipelineRunID": {
+									"value": {
+										"value": "@pipeline().RunId",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "unstatisticdbaparklinkedservice",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "SP Update",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "copy to Sql",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[pipelineExecutiHistiry_Update]",
+							"storedProcedureParameters": {
+								"Description": {
+									"value": {
+										"value": "@variables('PipelineExecDescription')",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"PipelineName": {
+									"value": {
+										"value": "@pipeline().Pipeline",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"PipelineRunID": {
+									"value": {
+										"value": "@pipeline().RunId",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"Status": {
+									"value": {
+										"value": "@variables('PipelineExecStatus')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "unstatisticdbaparklinkedservice",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "SP Create",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[dbo].[sp_getColumnMapping]",
+								"storedProcedureParameters": {
+									"schema_name": {
+										"type": "String",
+										"value": "dbo"
+									},
+									"table_name": {
+										"type": "String",
+										"value": "test3"
+									}
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dst_sql_test",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"PipelineExecDescription": {
+						"type": "String",
+						"defaultValue": "succeed"
+					},
+					"PipelineExecStatus": {
+						"type": "String",
+						"defaultValue": "succeed"
+					}
 				},
 				"annotations": [
 					"extract"
@@ -2278,7 +3813,7 @@
 				],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "test2"
+					"table": "test3"
 				}
 			},
 			"dependsOn": [
@@ -2397,6 +3932,30 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/FileServer1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('FileServer1_properties_typeProperties_host')]",
+					"userId": "[parameters('FileServer1_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('FileServer1_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "localdb",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/localdb')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/localsqldb')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -2488,6 +4047,26 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/First_Pipeline')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/trigger1')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 15,
+						"startTime": "2022-06-07T13:56:00",
+						"timeZone": "FLE Standard Time"
+					}
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/localdb')]",

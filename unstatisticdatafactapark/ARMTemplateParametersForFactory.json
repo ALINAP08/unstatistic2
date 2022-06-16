@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "unstatisticdatafactapark"
 		},
+		"FileServer1_password": {
+			"value": ""
+		},
 		"localsqldb_connectionString": {
 			"value": ""
 		},
@@ -16,6 +19,12 @@
 		},
 		"AzureSqlDatabase_keyvault_properties_typeProperties_connectionString_secretName": {
 			"value": "unstatisticserverapark-key-connection"
+		},
+		"FileServer1_properties_typeProperties_host": {
+			"value": "C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7"
+		},
+		"FileServer1_properties_typeProperties_userId": {
+			"value": "unstatisticadminapark"
 		},
 		"unstatistic_key_properties_typeProperties_baseUrl": {
 			"value": "https://unstatistickeyvault.vault.azure.net/"

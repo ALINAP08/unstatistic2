@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "unstatisticdatafactapark"
 		},
+		"FileServer1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FileServer1'"
+		},
 		"localsqldb_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'localsqldb'"
@@ -22,6 +26,14 @@
 		"AzureSqlDatabase_keyvault_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "unstatisticserverapark-key-connection"
+		},
+		"FileServer1_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7"
+		},
+		"FileServer1_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "unstatisticadminapark"
 		},
 		"unstatistic_key_properties_typeProperties_baseUrl": {
 			"type": "string",
@@ -60,6 +72,9 @@
 					"unstatisticuploadapp_connectionString": {
 						"value": "[parameters('unstatisticuploadapp_connectionString')]"
 					},
+					"FileServer1_password": {
+						"value": "[parameters('FileServer1_password')]"
+					},
 					"localsqldb_connectionString": {
 						"value": "[parameters('localsqldb_connectionString')]"
 					},
@@ -68,10 +83,36 @@
 					},
 					"AzureSqlDatabase_keyvault_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('AzureSqlDatabase_keyvault_properties_typeProperties_connectionString_secretName')]"
+					},
+					"FileServer1_properties_typeProperties_host": {
+						"value": "[parameters('FileServer1_properties_typeProperties_host')]"
+					},
+					"FileServer1_properties_typeProperties_userId": {
+						"value": "[parameters('FileServer1_properties_typeProperties_userId')]"
 					}
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "unstatisticdatafactapark_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'unstatisticdatafactapark_ArmTemplate_0')]"
+			]
 		}
 	]
 }
