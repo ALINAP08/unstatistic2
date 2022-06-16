@@ -130,7 +130,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "Select *From [dbo].[cfgSubmissionInfo] where [FileHandle]=1",
+						"sqlReaderQuery": "SELECT *\r\nFROM [dbo].[cfgSubmissionInfo] \r\nWHERE [FileHandle]=1\r\n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -161,7 +161,7 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "With datefield as (\nSelect getdate()-1 as PD,\n\tFORMAT((getdate()-1), 'yyyyMMdd', 'en-us') as PD_ID\n\t)\n\nInsert into [dbo].[cfgSubmissionInfo] ( \n\t\t[FileHandle]\n      \t,[PostDate]\n      \t,[PostDate_ID]\n      \t,[FormatFileName]\n      \t,[FormatFilePath]\n\t\t,[TableName]\n\t\t,[RawFileName]\n\t\t,[FilePath]\n\t\t,[AmountColumn]\n\t\t,[FirstRows]\n    )\n\nSelect \n\t1 as FileHandle,\n\tPD as PostDate,\n\tPD_ID AS PostDate_ID  ,\n \t'formatF_7.txt' as  FormatFileName,\n \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as FormatFilePath,\n \t'_rawATB' as TableName,\n \tConcat('Account_',month(PD),'.',day(PD),'.',year(PD),'.txt') as RawFileName,\n\t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as rawFilePath,\n\t'CurrentBalance' as AmountColumn,\n\t2 as FirstRows\nFrom datefield\nUnion all\nSelect \n\t2 as FileHandle,\n\tPD as PostDate,\n\tPD_ID AS PostDate_ID  ,\n\t'formatF_7_txn_chr.txt' as  FormatFileName,\n \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as FormatFilePath,\n \t'_rawTXNS_CHGS' as TableName,\n \tConcat('Transaction-Charge__',month(PD),'.',day(PD),'.',year(PD),'.txt') as RawFileName,\n  \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as rawFilePath,\n\t'TxnAmount' as AmountColumn,\n\t2 as FirstRows\nFrom datefield;"
+							"text": "WITH datefield AS (\nSELECT GETDATE()-1 AS PD,\n    FORMAT((GETDATE()-1), 'yyyyMMdd', 'en-us') AS PD_ID\n    )\n\nINSERT INTO [dbo].[cfgSubmissionInfo] ( \n        [FileHandle]\n        ,[PostDate]\n        ,[PostDate_ID]\n        ,[FormatFileName]\n        ,[FormatFilePath]\n        ,[TableName]\n        ,[RawFileName]\n        ,[FilePath]\n        ,[AmountColumn]\n        ,[FirstRows]\n    )\nSELECT \n    1 AS FileHandle,\n    PD AS PostDate,\n    PD_ID AS PostDate_ID,\n    'formatF_7.txt' AS FormatFileName,\n    'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\TASk_7' AS FormatFilePath,\n    '_rawATB' AS TableName,\n    CONCAT('Account_',MONTH(PD),'.',DAY(PD),'.',YEAR(PD),'.txt') AS RawFileName,\n    'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\TASk_7' AS rawFilePath,\n    'CurrentBalance' AS AmountColumn,\n    2 AS FirstRows\nFROM datefield\nUNION ALL\nSELECT \n    2 AS FileHandle,\n    PD AS PostDate,\n    PD_ID AS PostDate_ID  ,\n    'formatF_7_txn_chr.txt' AS  FormatFileName,\n    'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\TASk_7' AS FormatFilePath,\n    '_rawTXNS_CHGS' AS TableName,\n    CONCAT('Transaction-Charge__',MONTH(PD),'.',DAY(PD),'.',YEAR(PD),'.txt') AS RawFileName,\n    'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\TASk_7' AS rawFilePath,\n    'TxnAmount' AS AmountColumn,\n    2 AS FirstRows\nFROM datefield;\n\n"
 						}
 					]
 				}
@@ -188,7 +188,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "Select *From [dbo].[cfgSubmissionInfo] where [FileHandle]=2",
+						"sqlReaderQuery": "SELECT *\r\nFROM [dbo].[cfgSubmissionInfo] \r\nWHERE [FileHandle]=2\r\n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
