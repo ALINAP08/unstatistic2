@@ -47,7 +47,7 @@
 						},
 						"FileHandle": {
 							"value": {
-								"value": "@activity('Lookup for Atb').output.firstRow.ClearTable",
+								"value": "@activity('Lookup for Atb').output.firstRow.FileHandle",
 								"type": "Expression"
 							},
 							"type": "Int32"
@@ -244,7 +244,7 @@
 						},
 						"FileHandle": {
 							"value": {
-								"value": "@activity('Lookup for TxnChar').output.firstRow.ClearTable",
+								"value": "@activity('Lookup for TxnChar').output.firstRow.FileHandle",
 								"type": "Expression"
 							},
 							"type": "Int32"
