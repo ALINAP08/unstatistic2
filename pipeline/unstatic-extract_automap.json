@@ -99,16 +99,6 @@
 				}
 			}
 		],
-		"variables": {
-			"PipelineExecDescription": {
-				"type": "String",
-				"defaultValue": "succeed"
-			},
-			"PipelineExecStatus": {
-				"type": "String",
-				"defaultValue": "succeed"
-			}
-		},
 		"annotations": [
 			"extract"
 		]
