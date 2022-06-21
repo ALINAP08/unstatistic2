@@ -146,7 +146,7 @@
 							"typeProperties": {
 								"variableName": "AmountColumn",
 								"value": {
-									"value": "@activity('Lookup for Atb').output.AmountColumn",
+									"value": "@string(activity('Lookup for Atb').output.AmountColumn)",
 									"type": "Expression"
 								}
 							}
@@ -159,7 +159,7 @@
 							"typeProperties": {
 								"variableName": "Check_Existence",
 								"value": {
-									"value": "@activity('Lookup for Atb').output.Check_Existence",
+									"value": "@string(activity('Lookup for Atb').output.Check_Existence)",
 									"type": "Expression"
 								}
 							}
@@ -172,7 +172,7 @@
 							"typeProperties": {
 								"variableName": "ClearTable",
 								"value": {
-									"value": "@activity('Lookup for Atb').output.ClearTable",
+									"value": "@string(activity('Lookup for Atb').output.ClearTable)",
 									"type": "Expression"
 								}
 							}
@@ -185,7 +185,7 @@
 							"typeProperties": {
 								"variableName": "FileHandle",
 								"value": {
-									"value": "@activity('Lookup for Atb').output.FileHandle",
+									"value": "@string(activity('Lookup for Atb').output.FileHandle)",
 									"type": "Expression"
 								}
 							}
@@ -198,7 +198,7 @@
 							"typeProperties": {
 								"variableName": "FirstRow",
 								"value": {
-									"value": "@activity('Lookup for Atb').output.FirstRows",
+									"value": "@string(activity('Lookup for Atb').output.FirstRows)",
 									"type": "Expression"
 								}
 							}
@@ -211,7 +211,7 @@
 							"typeProperties": {
 								"variableName": "FormatFilePath",
 								"value": {
-									"value": "@activity('Lookup for Atb').output.FormatFilePath",
+									"value": "@string(activity('Lookup for Atb').output.FormatFilePath)",
 									"type": "Expression"
 								}
 							}
@@ -224,7 +224,7 @@
 							"typeProperties": {
 								"variableName": "FormatFileName",
 								"value": {
-									"value": "@activity('Lookup for Atb').output.FormatFileName",
+									"value": "@string(activity('Lookup for Atb').output.FormatFileName)",
 									"type": "Expression"
 								}
 							}
@@ -250,7 +250,7 @@
 							"typeProperties": {
 								"variableName": "RawFileName",
 								"value": {
-									"value": "@activity('Lookup for Atb').output.RawFileName",
+									"value": "@string(activity('Lookup for Atb').output.RawFileName)",
 									"type": "Expression"
 								}
 							}
@@ -263,7 +263,7 @@
 							"typeProperties": {
 								"variableName": "RawFilePath",
 								"value": {
-									"value": "@activity('Lookup for Atb').output.FilePath",
+									"value": "@string(activity('Lookup for Atb').output.FilePath)",
 									"type": "Expression"
 								}
 							}
@@ -276,7 +276,7 @@
 							"typeProperties": {
 								"variableName": "RawTableName",
 								"value": {
-									"value": "@activity('Lookup for Atb').output.TableName",
+									"value": "@string(activity('Lookup for Atb').output.TableName)",
 									"type": "Expression"
 								}
 							}
