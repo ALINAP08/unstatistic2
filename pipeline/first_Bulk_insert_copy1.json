@@ -137,7 +137,7 @@
 						"value": "@activity('Lookup for Atb').outputactivity('Lookup for Atb').output.count",
 						"type": "Expression"
 					},
-					"isSequential": true,
+					"isSequential": false,
 					"activities": [
 						{
 							"name": "AmountColumn",
