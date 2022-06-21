@@ -134,9 +134,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup for Atb').output",
+						"value": "@activity('Lookup for Atb').outputactivity('Lookup for Atb').output.count",
 						"type": "Expression"
 					},
+					"isSequential": true,
 					"activities": [
 						{
 							"name": "AmountColumn",
