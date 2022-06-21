@@ -134,7 +134,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup for Atb').outputactivity('Lookup for Atb').output.count",
+						"value": "@activity('Lookup for Atb').output.value",
 						"type": "Expression"
 					},
 					"isSequential": false,
