@@ -146,7 +146,7 @@
 							"scripts": [
 								{
 									"type": "NonQuery",
-									"text": "Delete from [dbo].[cfgSubmissionInfo] "
+									"text": "DELETE FROM [dbo].[cfgSubmissionInfo] "
 								}
 							]
 						}
@@ -969,7 +969,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlServerSource",
-								"sqlReaderQuery": "Select *From [dbo].[cfgSubmissionInfo] where [FileHandle]=1",
+								"sqlReaderQuery": "SELECT *\r\nFROM [dbo].[cfgSubmissionInfo] \r\nWHERE [FileHandle]=1\r\n",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -1001,7 +1001,7 @@
 							"scripts": [
 								{
 									"type": "NonQuery",
-									"text": "With datefield as (\nSelect getdate()-1 as PD,\n\tFORMAT((getdate()-1), 'yyyyMMdd', 'en-us') as PD_ID\n\t)\n\nInsert into [dbo].[cfgSubmissionInfo] ( \n\t\t[FileHandle]\n      \t,[PostDate]\n      \t,[PostDate_ID]\n      \t,[FormatFileName]\n      \t,[FormatFilePath]\n\t\t,[TableName]\n\t\t,[RawFileName]\n\t\t,[FilePath]\n\t\t,[AmountColumn]\n\t\t,[FirstRows]\n    )\n\nSelect \n\t1 as FileHandle,\n\tPD as PostDate,\n\tPD_ID AS PostDate_ID  ,\n \t'formatF_7.txt' as  FormatFileName,\n \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as FormatFilePath,\n \t'_rawATB' as TableName,\n \tConcat('Account_',month(PD),'.',day(PD),'.',year(PD),'.txt') as RawFileName,\n\t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as rawFilePath,\n\t'CurrentBalance' as AmountColumn,\n\t2 as FirstRows\nFrom datefield\nUnion all\nSelect \n\t2 as FileHandle,\n\tPD as PostDate,\n\tPD_ID AS PostDate_ID  ,\n\t'formatF_7_txn_chr.txt' as  FormatFileName,\n \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as FormatFilePath,\n \t'_rawTXNS_CHGS' as TableName,\n \tConcat('Transaction-Charge__',month(PD),'.',day(PD),'.',year(PD),'.txt') as RawFileName,\n  \t'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7' as rawFilePath,\n\t'TxnAmount' as AmountColumn,\n\t2 as FirstRows\nFrom datefield;"
+									"text": "WITH datefield AS (\nSELECT GETDATE()-1 AS PD,\n    FORMAT((GETDATE()-1), 'yyyyMMdd', 'en-us') AS PD_ID\n    )\n\nINSERT INTO [dbo].[cfgSubmissionInfo] ( \n        [FileHandle]\n        ,[PostDate]\n        ,[PostDate_ID]\n        ,[FormatFileName]\n        ,[FormatFilePath]\n        ,[TableName]\n        ,[RawFileName]\n        ,[FilePath]\n        ,[AmountColumn]\n        ,[FirstRows]\n    )\nSELECT \n    1 AS FileHandle,\n    PD AS PostDate,\n    PD_ID AS PostDate_ID,\n    'formatF_7.txt' AS FormatFileName,\n    'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\TASk_7' AS FormatFilePath,\n    '_rawATB' AS TableName,\n    CONCAT('Account_',MONTH(PD),'.',DAY(PD),'.',YEAR(PD),'.txt') AS RawFileName,\n    'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\TASk_7' AS rawFilePath,\n    'CurrentBalance' AS AmountColumn,\n    2 AS FirstRows\nFROM datefield\nUNION ALL\nSELECT \n    2 AS FileHandle,\n    PD AS PostDate,\n    PD_ID AS PostDate_ID  ,\n    'formatF_7_txn_chr.txt' AS  FormatFileName,\n    'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\TASk_7' AS FormatFilePath,\n    '_rawTXNS_CHGS' AS TableName,\n    CONCAT('Transaction-Charge__',MONTH(PD),'.',DAY(PD),'.',YEAR(PD),'.txt') AS RawFileName,\n    'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\TASk_7' AS rawFilePath,\n    'TxnAmount' AS AmountColumn,\n    2 AS FirstRows\nFROM datefield;\n\n"
 								}
 							]
 						}
@@ -1028,7 +1028,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlServerSource",
-								"sqlReaderQuery": "Select *From [dbo].[cfgSubmissionInfo] where [FileHandle]=2",
+								"sqlReaderQuery": "SELECT *\r\nFROM [dbo].[cfgSubmissionInfo] \r\nWHERE [FileHandle]=2\r\n",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -1316,7 +1316,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlServerSource",
-								"sqlReaderQuery": "CREATE TABLE #Check_atb_files (column_1 VARCHAR(MAX) NOT NULL)\nDeclare @filename varchar(50)\nSelect @filename=concat('Account_',month(Getdate()-1),'.',day(Getdate()-1),'.',year(Getdate()-1),'.txt')\nprint @filename\nexec('BULK Insert #Check_atb_files From ''C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7\\'+@filename+'''\n\t\tWith (FIRSTROW =2,  rowterminator = ''\\n'');');\n\n\nSelect*from  #Check_atb_files\n",
+								"sqlReaderQuery": "CREATE TABLE #Check_atb_files (column_1 VARCHAR(MAX) NOT NULL)\n\nDECLARE @filename VARCHAR(50)\n\nSELECT @filename=CONCAT('Account_', MONTH(GETDATE()-1),'.',DAY(GETDATE()-1),'.',YEAR(GETDATE()-1),'.txt')\n\nEXEC('BULK Insert #Check_atb_files From ''C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7\\'+@filename+'''\n        With (FIRSTROW =2,  rowterminator = ''\\n'');');\nSELECT*\nFROM #Check_atb_files\n",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -1342,7 +1342,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlServerSource",
-								"sqlReaderQuery": "CREATE TABLE #Check_txn_char_files (column_1 VARCHAR(MAX) NOT NULL)\nDeclare @filenametxn varchar(50)\nSelect @filenametxn=concat('Transaction-Charge__',month(Getdate()-1),'.',day(Getdate()-1),'.',year(Getdate()-1),'.txt')\nprint @filenametxn\nexec('BULK Insert #Check_txn_char_files From ''C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7\\'+@filenametxn+'''\n\t\tWith (FIRSTROW =2,  rowterminator = ''\\n'');');\n\n\nSelect*from  #Check_txn_char_files\n",
+								"sqlReaderQuery": "CREATE TABLE #Check_txn_char_files (column_1 VARCHAR(MAX) NOT NULL)\n\nDECLARE @filenametxn VARCHAR(50)\n\nSELECT @filenametxn=CONCAT('Transaction-Charge__', MONTH(GETDATE()-1),'.', DAY(GETDATE()-1),'.',YEAR(Getdate()-1),'.txt')\n\nEXEC('BULK Insert #Check_txn_char_files From ''C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\Task_7\\'+@filenametxn+'''\n        With (FIRSTROW =2,  rowterminator = ''\\n'');');\n\t\t\nSELECT *\nFROM #Check_txn_char_files\n\n",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -2904,109 +2904,9 @@
 						]
 					},
 					{
-						"name": "SP Create",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[pipelineExecutiHistiry_Create]",
-							"storedProcedureParameters": {
-								"PipelineName": {
-									"value": {
-										"value": "@pipeline().Pipeline",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"PipelineRunID": {
-									"value": {
-										"value": "@pipeline().RunId",
-										"type": "Expression"
-									},
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "unstatisticdbaparklinkedservice",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "SP Update",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "copy to Sql",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[pipelineExecutiHistiry_Update]",
-							"storedProcedureParameters": {
-								"Description": {
-									"value": {
-										"value": "@variables('PipelineExecDescription')",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"PipelineName": {
-									"value": {
-										"value": "@pipeline().Pipeline",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"PipelineRunID": {
-									"value": {
-										"value": "@pipeline().RunId",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"Status": {
-									"value": {
-										"value": "@variables('PipelineExecStatus')",
-										"type": "Expression"
-									},
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "unstatisticdbaparklinkedservice",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
 						"name": "Lookup1",
 						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "SP Create",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -3044,24 +2944,13 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
-				"variables": {
-					"PipelineExecDescription": {
-						"type": "String",
-						"defaultValue": "succeed"
-					},
-					"PipelineExecStatus": {
-						"type": "String",
-						"defaultValue": "succeed"
-					}
-				},
 				"annotations": [
 					"extract"
 				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/src_csv_new')]",
-				"[concat(variables('factoryId'), '/datasets/dst_sql_test')]",
-				"[concat(variables('factoryId'), '/linkedServices/unstatisticdbaparklinkedservice')]"
+				"[concat(variables('factoryId'), '/datasets/dst_sql_test')]"
 			]
 		},
 		{
