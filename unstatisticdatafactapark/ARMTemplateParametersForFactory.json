@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "unstatisticdatafactapark"
 		},
+		"AzureSqlDatabase1_connectionString": {
+			"value": ""
+		},
 		"FileServer1_password": {
 			"value": ""
 		},
@@ -25,6 +28,9 @@
 		},
 		"FileServer1_properties_typeProperties_userId": {
 			"value": "unstatisticadminapark"
+		},
+		"testkeyAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
+			"value": "@linkedService().secretkey"
 		},
 		"unstatistic_key_properties_typeProperties_baseUrl": {
 			"value": "https://unstatistickeyvault.vault.azure.net/"

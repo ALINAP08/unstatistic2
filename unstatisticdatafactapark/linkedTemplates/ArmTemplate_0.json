@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'unstatisticuploadapp'"
 		},
+		"AzureSqlDatabase1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		},
 		"FileServer1_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'FileServer1'"
@@ -38,6 +42,10 @@
 		"FileServer1_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "unstatisticadminapark"
+		},
+		"testkeyAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "@linkedService().secretkey"
 		}
 	},
 	"variables": {
@@ -428,6 +436,43 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					},
+					"ServerName": {
+						"type": "String"
+					},
+					"secretKey": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabase1_connectionString')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "unstatistic_key",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": {
+							"value": "@linkedService().secretKey",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/unstatistic_key')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase_keyvault')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -490,6 +535,36 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/localdb')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/testkeyAzureSqlDatabase')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"secretkey": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "unstatistic_key",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": {
+							"value": "[parameters('testkeyAzureSqlDatabase_properties_typeProperties_connectionString_secretName')]",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/unstatistic_key')]"
 			]
 		},
 		{
@@ -1890,460 +1965,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/src_csv_new')]",
 				"[concat(variables('factoryId'), '/datasets/dst_sql_test')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/unstatic-extract_lookup')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "copy to Sql",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "SP Create",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "AccountNumber",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "AccountNumber",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "AccountSuffix",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "AccountSuffix",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "EMPINumber",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "EMPINumber",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "FacilityID",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "FacilityID",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "ServiceDate",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "ServiceDate",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "AdmitDate",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "AdmitDate",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "DischargeDate",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "DischargeDate",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "FinalBillDate",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "FinalBillDate",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "TxnInsurancePlan",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "TxnInsurancePlan",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "TxnFinancialClass",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "TxnFinancialClass",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "HTRID",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "HTRID",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "src_csv_new",
-								"type": "DatasetReference",
-								"parameters": {
-									"Container": {
-										"value": "@pipeline().parameters.Container",
-										"type": "Expression"
-									},
-									"FileName": {
-										"value": "@pipeline().parameters.FileName",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dst_sql_test",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "SP Create",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[pipelineExecutiHistiry_Create]",
-							"storedProcedureParameters": {
-								"PipelineName": {
-									"value": {
-										"value": "@pipeline().Pipeline",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"PipelineRunID": {
-									"value": {
-										"value": "@pipeline().RunId",
-										"type": "Expression"
-									},
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "unstatisticdbaparklinkedservice",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "SP Update",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "Set variable Status",
-								"dependencyConditions": [
-									"Succeeded",
-									"Skipped"
-								]
-							},
-							{
-								"activity": "Lookup_FileName",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[pipelineExecutiHistiry_Update]",
-							"storedProcedureParameters": {
-								"Description": {
-									"value": {
-										"value": "@variables('PipelineExecDescription')",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"PipelineName": {
-									"value": {
-										"value": "@pipeline().Pipeline",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"PipelineRunID": {
-									"value": {
-										"value": "@pipeline().RunId",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"Status": {
-									"value": {
-										"value": "@variables('PipelineExecStatus')",
-										"type": "Expression"
-									},
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "unstatisticdbaparklinkedservice",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Set variable Description",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "copy to Sql",
-								"dependencyConditions": [
-									"Failed"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "PipelineExecDescription",
-							"value": {
-								"value": "@activity('copy to Sql').error.message",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Set variable Status",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Set variable Description",
-								"dependencyConditions": [
-									"Succeeded",
-									"Failed"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "PipelineExecStatus",
-							"value": "Failed"
-						}
-					},
-					{
-						"name": "Lookup_FileName",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "copy to Sql",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": {
-									"value": "@replace('Update [dbo].[test2] \nSET [Filename] =''variablefilename''\nwhere [Filename] IS NULL\nSelect 1;'\n,'variablefilename'\n,pipeline().parameters.FileName\n)",
-									"type": "Expression"
-								},
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "dsr_sql_dummy2",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"Container": {
-						"type": "string",
-						"defaultValue": "unstaticcontapp"
-					},
-					"FileName": {
-						"type": "string",
-						"defaultValue": "new.csv"
-					}
-				},
-				"variables": {
-					"PipelineExecDescription": {
-						"type": "String",
-						"defaultValue": "succeed"
-					},
-					"PipelineExecStatus": {
-						"type": "String",
-						"defaultValue": "succeed"
-					}
-				},
-				"folder": {
-					"name": "unstatistic"
-				},
-				"annotations": [
-					"extract"
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/src_csv_new')]",
-				"[concat(variables('factoryId'), '/datasets/dst_sql_test')]",
-				"[concat(variables('factoryId'), '/linkedServices/unstatisticdbaparklinkedservice')]",
-				"[concat(variables('factoryId'), '/datasets/dsr_sql_dummy2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_ov9')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "localsqldb",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"cw_table": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": {
-						"value": "@dataset().cw_table",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/localsqldb')]"
 			]
 		}
 	]
