@@ -595,9 +595,6 @@
 			}
 		},
 		"variables": {
-			"123": {
-				"type": "String"
-			},
 			"AmountColumn": {
 				"type": "String"
 			},
