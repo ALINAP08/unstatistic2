@@ -104,7 +104,7 @@
 									},
 									"FirstRow": {
 										"value": {
-											"value": "@activity('Lookup1').output.firstRow.FirstRow",
+											"value": "@activity('Lookup1').output.firstRow.FirstRows",
 											"type": "Expression"
 										},
 										"type": "Int32"
