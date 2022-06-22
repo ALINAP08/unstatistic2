@@ -443,77 +443,77 @@
 								"storedProcedureParameters": {
 									"AmountColumn": {
 										"value": {
-											"value": "@variables('AmountColumn')",
+											"value": "@variables('AmountColumn').value",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"Check_Existence": {
 										"value": {
-											"value": "@variables('Check_Existence')",
+											"value": "@variables('Check_Existence').value",
 											"type": "Expression"
 										},
 										"type": "Byte[]"
 									},
 									"ClearTable": {
 										"value": {
-											"value": "@variables('ClearTable')",
+											"value": "@variables('ClearTable').value",
 											"type": "Expression"
 										},
 										"type": "Byte[]"
 									},
 									"FileHandle": {
 										"value": {
-											"value": "@variables('FileHandle')",
+											"value": "@variables('FileHandle').value",
 											"type": "Expression"
 										},
 										"type": "Int32"
 									},
 									"FirstRow": {
 										"value": {
-											"value": "@variables('FirstRow')",
+											"value": "@variables('FirstRow').value",
 											"type": "Expression"
 										},
 										"type": "Int32"
 									},
 									"FormatFileName": {
 										"value": {
-											"value": "@variables('FormatFileName')",
+											"value": "@variables('FormatFileName').value",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"FormatFilePath": {
 										"value": {
-											"value": "@variables('FormatFilePath')",
+											"value": "@variables('FormatFilePath').value",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"PostDate": {
 										"value": {
-											"value": "@variables('PostDate')",
+											"value": "@variables('PostDate').value",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"RawFileName": {
 										"value": {
-											"value": "@variables('RawFileName')",
+											"value": "@variables('RawFileName').value",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"RawFilePath": {
 										"value": {
-											"value": "@variables('RawFilePath')",
+											"value": "@variables('RawFilePath').value",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"RawTableName": {
 										"value": {
-											"value": "@variables('RawTableName')",
+											"value": "@variables('RawTableName').value",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -595,6 +595,9 @@
 			}
 		},
 		"variables": {
+			"123": {
+				"type": "String"
+			},
 			"AmountColumn": {
 				"type": "String"
 			},
