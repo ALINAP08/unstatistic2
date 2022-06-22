@@ -75,7 +75,7 @@
 									"writeBehavior": "insert",
 									"sqlWriterUseTableLock": false,
 									"tableOption": {
-										"value": "@{activity('Lookup1').output.value.tablename}",
+										"value": "@{item().tablename}",
 										"type": "Expression"
 									},
 									"disableMetricsCollection": false
@@ -111,6 +111,11 @@
 				}
 			}
 		],
+		"parameters": {
+			"tablename": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }
