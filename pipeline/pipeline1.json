@@ -147,14 +147,14 @@
 										"schema_name": {
 											"type": "String",
 											"value": {
-												"value": "@activity('Lookup1').output.schema_tabName",
+												"value": "@item().schema_tabName",
 												"type": "Expression"
 											}
 										},
 										"table_name": {
 											"type": "String",
 											"value": {
-												"value": "@activity('Lookup1').output.tablename",
+												"value": "@item().tablename",
 												"type": "Expression"
 											}
 										}
