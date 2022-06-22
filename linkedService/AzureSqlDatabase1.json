@@ -1,0 +1,32 @@
+{
+	"name": "AzureSqlDatabase1",
+	"properties": {
+		"parameters": {
+			"DBName": {
+				"type": "String"
+			},
+			"ServerName": {
+				"type": "String"
+			},
+			"secretKey": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=@{linkedService().ServerName};Initial Catalog=@{linkedService().DBName};User ID=unstatisticadminapark",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "unstatistic_key",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": {
+					"value": "@linkedService().secretKey",
+					"type": "Expression"
+				}
+			}
+		}
+	}
+}
