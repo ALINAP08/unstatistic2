@@ -133,6 +133,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup for Atb_copy1').output.value",
+						"type": "Expression"
+					},
 					"isSequential": false,
 					"activities": [
 						{
@@ -143,7 +147,7 @@
 							"typeProperties": {
 								"variableName": "AmountColumn",
 								"value": {
-									"value": "@string(activity('Lookup for Atb').output.firstrow.AmountColumn)",
+									"value": "@string(activity('Lookup for Atb').output.AmountColumn)",
 									"type": "Expression"
 								}
 							}
@@ -156,7 +160,7 @@
 							"typeProperties": {
 								"variableName": "Check_Existence",
 								"value": {
-									"value": "@string(activity('Lookup for Atb').output.firstrow.Check_Existence)",
+									"value": "@string(activity('Lookup for Atb').output.value.Check_Existence)",
 									"type": "Expression"
 								}
 							}
@@ -469,7 +473,6 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "SELECT *\nFROM [dbo].[cfgSubmissionInfo] \n\n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
