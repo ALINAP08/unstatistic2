@@ -17,6 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT 'newttestserver-firstdbtest-key' AS 'secretkey','dbo' AS schema_tabName, 'test1' AS tablename\nUNION ALL\nSELECT 'newtwotestswerver-seconddbtest-key' AS 'secretkey','dbo' AS schema_tabName , 'test2' AS tablename",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
