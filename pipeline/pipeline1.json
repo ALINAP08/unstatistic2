@@ -92,7 +92,7 @@
 								},
 								"enableStaging": false,
 								"translator": {
-									"value": "@json(activity('Lookup1_copy1').output.value.json_output)\n\n",
+									"value": "@json(activity('Lookup1_copy1').output.firstrow.json_output)\n",
 									"type": "Expression"
 								}
 							},
