@@ -166,7 +166,7 @@
 									"referenceName": "dst_sql_test",
 									"type": "DatasetReference"
 								},
-								"firstRowOnly": false
+								"firstRowOnly": true
 							}
 						}
 					]
