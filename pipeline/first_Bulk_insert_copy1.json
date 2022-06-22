@@ -548,7 +548,7 @@
 									"referenceName": "SqlServerTable1",
 									"type": "DatasetReference"
 								},
-								"firstRowOnly": false
+								"firstRowOnly": true
 							}
 						}
 					]
@@ -576,6 +576,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT 1\n\n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
