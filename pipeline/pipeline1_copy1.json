@@ -23,7 +23,12 @@
 					},
 					"dataset": {
 						"referenceName": "AzureSqlTable2",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"DBName_look": "firstdbtest",
+							"ServerName_look": "newttestserver.database.windows.net",
+							"secretKey_look": "newttestserver-firstdbtest-key"
+						}
 					},
 					"firstRowOnly": false
 				}
