@@ -47,7 +47,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup for Atb_copy1').output.value",
+						"value": "@activity('Lookup for Atb_copy1').output",
 						"type": "Expression"
 					},
 					"isSequential": false,
@@ -202,7 +202,6 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "SELECT 1\n\n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -218,41 +217,6 @@
 			"receiver": {
 				"type": "string",
 				"defaultValue": "alina_parkhomenko@epam.com"
-			}
-		},
-		"variables": {
-			"AmountColumn": {
-				"type": "String"
-			},
-			"Check_Existence": {
-				"type": "String"
-			},
-			"ClearTable": {
-				"type": "String"
-			},
-			"FileHandle": {
-				"type": "String"
-			},
-			"FirstRow": {
-				"type": "String"
-			},
-			"FormatFileName": {
-				"type": "String"
-			},
-			"FormatFilePath": {
-				"type": "String"
-			},
-			"PostDate": {
-				"type": "String"
-			},
-			"RawFileName": {
-				"type": "String"
-			},
-			"RawFilePath": {
-				"type": "String"
-			},
-			"RawTableName": {
-				"type": "String"
 			}
 		},
 		"folder": {
