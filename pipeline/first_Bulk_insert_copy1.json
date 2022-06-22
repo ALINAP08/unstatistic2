@@ -142,12 +142,19 @@
 						{
 							"name": "AmountColumn",
 							"type": "SetVariable",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Lookup1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "AmountColumn",
 								"value": {
-									"value": "@string(activity('Lookup for Atb').output.AmountColumn)",
+									"value": "@string(activity('Lookup1').output.firstrow.AmountColumn)\n",
 									"type": "Expression"
 								}
 							}
@@ -155,12 +162,19 @@
 						{
 							"name": "Check_Existence",
 							"type": "SetVariable",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Lookup1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "Check_Existence",
 								"value": {
-									"value": "@string(activity('Lookup for Atb').output.value.Check_Existence)",
+									"value": "@string(activity('Lookup1').output.firstrow.Check_Existence)",
 									"type": "Expression"
 								}
 							}
@@ -168,12 +182,19 @@
 						{
 							"name": "ClearTable",
 							"type": "SetVariable",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Lookup1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "ClearTable",
 								"value": {
-									"value": "@string(activity('Lookup for Atb').output.firstrow.ClearTable)",
+									"value": "@string(activity('Lookup1').output.firstrow.ClearTable)",
 									"type": "Expression"
 								}
 							}
@@ -181,12 +202,19 @@
 						{
 							"name": "FileHandle",
 							"type": "SetVariable",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Lookup1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "FileHandle",
 								"value": {
-									"value": "@string(activity('Lookup for Atb').output.firstrow.FileHandle)",
+									"value": "@string(activity('Lookup1').output.firstrow.FileHandle)",
 									"type": "Expression"
 								}
 							}
@@ -194,12 +222,19 @@
 						{
 							"name": "FirstRow",
 							"type": "SetVariable",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Lookup1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "FirstRow",
 								"value": {
-									"value": "@string(activity('Lookup for Atb').output.firstrow.FirstRows)",
+									"value": "@string(activity('Lookup1').output.firstrow.FirstRows)",
 									"type": "Expression"
 								}
 							}
@@ -207,12 +242,19 @@
 						{
 							"name": "FormatFilePath",
 							"type": "SetVariable",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Lookup1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "FormatFilePath",
 								"value": {
-									"value": "@string(activity('Lookup for Atb').output.firstrow.FormatFilePath)",
+									"value": "@string(activity('Lookup1').output.firstrow.FormatFilePath)",
 									"type": "Expression"
 								}
 							}
@@ -220,12 +262,19 @@
 						{
 							"name": "FormatFileName",
 							"type": "SetVariable",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Lookup1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "FormatFileName",
 								"value": {
-									"value": "@string(activity('Lookup for Atb').output.firstrow.FormatFileName)",
+									"value": "@string(activity('Lookup1').output.firstrow.FormatFileName)",
 									"type": "Expression"
 								}
 							}
@@ -233,12 +282,19 @@
 						{
 							"name": "PostDate",
 							"type": "SetVariable",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Lookup1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "PostDate",
 								"value": {
-									"value": "@string(activity('Lookup for Atb').output.firstrow.PostDate_ID)",
+									"value": "@string(activity('Lookup1').output.firstrow.PostDate_ID)",
 									"type": "Expression"
 								}
 							}
@@ -246,12 +302,19 @@
 						{
 							"name": "RawFileName",
 							"type": "SetVariable",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Lookup1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "RawFileName",
 								"value": {
-									"value": "@string(activity('Lookup for Atb').output.firstrow.RawFileName)",
+									"value": "@string(activity('Lookup1').output.firstrow.RawFileName)",
 									"type": "Expression"
 								}
 							}
@@ -259,12 +322,19 @@
 						{
 							"name": "RawFilePath",
 							"type": "SetVariable",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Lookup1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "RawFilePath",
 								"value": {
-									"value": "@string(activity('Lookup for Atb').output.firstrow.FilePath)",
+									"value": "@string(activity('Lookup1').output.firstrow.FilePath)",
 									"type": "Expression"
 								}
 							}
@@ -272,12 +342,19 @@
 						{
 							"name": "RawTableName",
 							"type": "SetVariable",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Lookup1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "RawTableName",
 								"value": {
-									"value": "@string(activity('Lookup for Atb').output.firstrow.TableName)",
+									"value": "@string(activity('Lookup1').output.firstrow.TableName)",
 									"type": "Expression"
 								}
 							}
@@ -446,6 +523,31 @@
 							"linkedServiceName": {
 								"referenceName": "localsqldb",
 								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Lookup1",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": "Select * from dbo.cfgSubmissionInfo",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SqlServerTable1",
+									"type": "DatasetReference"
+								}
 							}
 						}
 					]
