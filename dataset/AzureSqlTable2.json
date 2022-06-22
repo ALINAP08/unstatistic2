@@ -2,8 +2,11 @@
 	"name": "AzureSqlTable2",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "unstatisticdbaparklinkedservice",
-			"type": "LinkedServiceReference"
+			"referenceName": "testkeyAzureSqlDatabase",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"secretkey": "newttestserver-firstdbtest-key"
+			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
