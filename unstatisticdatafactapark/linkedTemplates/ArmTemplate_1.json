@@ -554,7 +554,10 @@
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "testkeyAzureSqlDatabase",
-					"type": "LinkedServiceReference"
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"secretkey": "newttestserver-firstdbtest-key"
+					}
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -2470,7 +2473,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT 'newttestserver-firstdbtest-key' AS 'secretkey','dbo' AS schema_tabName, 'test1' AS tablename\nUNION ALL\nSELECT 'newtwotestswerver-seconddbtest-key' AS 'secretkey','dbo' AS schema_tabName , 'test2' AS tablename\n",
+								"sqlReaderQuery": "SELECT 'newttestserver-firstdbtest-key' AS 'secretkey','dbo' AS schema_tabName, 'test3' AS tablename\nUNION ALL\nSELECT 'newtwotestswerver-seconddbtest-key' AS 'secretkey','dbo' AS schema_tabName , 'test3' AS tablename",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -2503,7 +2506,14 @@
 								{
 									"name": "Copy data1",
 									"type": "Copy",
-									"dependsOn": [],
+									"dependsOn": [
+										{
+											"activity": "Lookup1_copy1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
 									"policy": {
 										"timeout": "7.00:00:00",
 										"retry": 0,
@@ -2536,12 +2546,8 @@
 										},
 										"enableStaging": false,
 										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
+											"value": "@json(activity('Lookup1_copy1').output.firstRow.json_output)",
+											"type": "Expression"
 										}
 									},
 									"inputs": [
@@ -2568,12 +2574,48 @@
 													"type": "Expression"
 												},
 												"table_name": {
-													"value": "@item().schema_tabName",
+													"value": "@item().tablename",
 													"type": "Expression"
 												}
 											}
 										}
 									]
+								},
+								{
+									"name": "Lookup1_copy1",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderStoredProcedureName": "[[dbo].[sp_getColumnMapping]",
+											"storedProcedureParameters": {
+												"schema_name": {
+													"type": "String",
+													"value": "dbo"
+												},
+												"table_name": {
+													"type": "String",
+													"value": "test3"
+												}
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "dst_sql_test",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									}
 								}
 							]
 						}
