@@ -1,0 +1,25 @@
+{
+	"name": "testkeyAzureSqlDatabase",
+	"properties": {
+		"parameters": {
+			"secretkey": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "unstatistic_key",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": {
+					"value": "@linkedService().secretkey",
+					"type": "Expression"
+				}
+			}
+		}
+	}
+}
