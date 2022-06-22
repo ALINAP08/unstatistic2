@@ -125,7 +125,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Send mail about Successed 1",
+						"activity": "Lookup for Atb_copy1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -133,23 +133,12 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"items": {
-						"value": "@activity('Lookup for Atb').output.value",
-						"type": "Expression"
-					},
 					"isSequential": false,
 					"activities": [
 						{
 							"name": "AmountColumn",
 							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Lookup for Atb_copy1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "AmountColumn",
@@ -162,14 +151,7 @@
 						{
 							"name": "Check_Existence",
 							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Lookup for Atb_copy1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "Check_Existence",
@@ -182,14 +164,7 @@
 						{
 							"name": "ClearTable",
 							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Lookup for Atb_copy1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "ClearTable",
@@ -202,14 +177,7 @@
 						{
 							"name": "FileHandle",
 							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Lookup for Atb_copy1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "FileHandle",
@@ -222,14 +190,7 @@
 						{
 							"name": "FirstRow",
 							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Lookup for Atb_copy1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "FirstRow",
@@ -242,14 +203,7 @@
 						{
 							"name": "FormatFilePath",
 							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Lookup for Atb_copy1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "FormatFilePath",
@@ -262,14 +216,7 @@
 						{
 							"name": "FormatFileName",
 							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Lookup for Atb_copy1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "FormatFileName",
@@ -282,14 +229,7 @@
 						{
 							"name": "PostDate",
 							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Lookup for Atb_copy1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "PostDate",
@@ -302,14 +242,7 @@
 						{
 							"name": "RawFileName",
 							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Lookup for Atb_copy1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "RawFileName",
@@ -322,14 +255,7 @@
 						{
 							"name": "RawFilePath",
 							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Lookup for Atb_copy1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "RawFilePath",
@@ -342,14 +268,7 @@
 						{
 							"name": "RawTableName",
 							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Lookup for Atb_copy1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "RawTableName",
@@ -524,34 +443,41 @@
 								"referenceName": "localsqldb",
 								"type": "LinkedServiceReference"
 							}
-						},
-						{
-							"name": "Lookup for Atb_copy1",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "SqlServerSource",
-									"sqlReaderQuery": "SELECT *\nFROM [dbo].[cfgSubmissionInfo] \n\n",
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "SqlServerTable1",
-									"type": "DatasetReference"
-								},
-								"firstRowOnly": true
-							}
 						}
 					]
+				}
+			},
+			{
+				"name": "Lookup for Atb_copy1",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Send mail about Successed 1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT *\nFROM [dbo].[cfgSubmissionInfo] \n\n",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SqlServerTable1",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
