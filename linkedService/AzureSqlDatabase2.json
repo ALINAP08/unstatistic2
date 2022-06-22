@@ -1,0 +1,25 @@
+{
+	"name": "AzureSqlDatabase2",
+	"properties": {
+		"parameters": {
+			"secretKey": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "unstatistic_key",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": {
+					"value": "@linkedService().secretKey",
+					"type": "Expression"
+				}
+			}
+		}
+	}
+}
