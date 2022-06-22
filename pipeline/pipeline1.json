@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT 'newttestserver-firstdbtest-key' AS 'secretkey', 'test1' AS tablename\nUNION ALL\nSELECT 'newtwotestswerver-seconddbtest-key' AS 'secretkey' , 'test2' AS tablename",
+						"sqlReaderQuery": "SELECT 'newttestserver-firstdbtest-key' AS 'secretkey','dbo' AS schema_tabName, 'test1' AS tablename\nUNION ALL\nSELECT 'newtwotestswerver-seconddbtest-key' AS 'secretkey','dbo' AS schema_tabName , 'test2' AS tablename\n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -103,7 +103,21 @@
 							"outputs": [
 								{
 									"referenceName": "AzureSqlTable3",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"secur_key": {
+											"value": "@item().secretkey",
+											"type": "Expression"
+										},
+										"table_schema": {
+											"value": "@item().schema_tabName",
+											"type": "Expression"
+										},
+										"table_name": {
+											"value": "@item().schema_tabName",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
@@ -111,11 +125,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"tablename": {
-				"type": "string"
-			}
-		},
 		"annotations": []
 	}
 }
