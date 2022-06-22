@@ -146,11 +146,17 @@
 									"storedProcedureParameters": {
 										"schema_name": {
 											"type": "String",
-											"value": "dbo"
+											"value": {
+												"value": "@activity('Lookup1').output.schema_tabName",
+												"type": "Expression"
+											}
 										},
 										"table_name": {
 											"type": "String",
-											"value": "test3"
+											"value": {
+												"value": "@activity('Lookup1').output.tablename",
+												"type": "Expression"
+											}
 										}
 									},
 									"queryTimeout": "02:00:00",
