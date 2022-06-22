@@ -2,18 +2,10 @@
 	"name": "AzureSqlTable2",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureSqlDatabase1",
+			"referenceName": "testkeyAzureSqlDatabase",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"DBName": {
-					"value": "@dataset().DBName_look",
-					"type": "Expression"
-				},
-				"ServerName": {
-					"value": "@dataset().ServerName_look",
-					"type": "Expression"
-				},
-				"secretKey": {
+				"secretkey": {
 					"value": "@dataset().secretKey_look",
 					"type": "Expression"
 				}
