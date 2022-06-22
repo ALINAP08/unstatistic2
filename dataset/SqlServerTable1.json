@@ -63,10 +63,6 @@
 				"type": "tinyint",
 				"precision": 3
 			}
-		],
-		"typeProperties": {
-			"schema": "dbo",
-			"table": "cfgSubmissionInfo"
-		}
+		]
 	}
 }
