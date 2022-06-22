@@ -125,7 +125,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Lookup for Atb",
+						"activity": "Send mail about Successed 1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -552,39 +552,6 @@
 							}
 						}
 					]
-				}
-			},
-			{
-				"name": "Lookup for Atb",
-				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "Send mail about Successed 1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "SqlServerSource",
-						"sqlReaderQuery": "SELECT *\nFROM [dbo].[cfgSubmissionInfo] \n\n",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"dataset": {
-						"referenceName": "SqlServerTable1",
-						"type": "DatasetReference"
-					},
-					"firstRowOnly": false
 				}
 			}
 		],
