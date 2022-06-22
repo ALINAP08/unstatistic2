@@ -3,7 +3,10 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "testkeyAzureSqlDatabase",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"secretkey": "newttestserver-firstdbtest-key"
+			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
