@@ -49,7 +49,14 @@
 						{
 							"name": "Copy data1",
 							"type": "Copy",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Lookup1_copy1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -82,12 +89,8 @@
 								},
 								"enableStaging": false,
 								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
+									"value": "@json(activity('Lookup1_copy1').output.firstRow.json_output)",
+									"type": "Expression"
 								}
 							},
 							"inputs": [
@@ -120,6 +123,41 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "Lookup1_copy1",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderStoredProcedureName": "[dbo].[sp_getColumnMapping]",
+									"storedProcedureParameters": {
+										"schema_name": {
+											"type": "String",
+											"value": "dbo"
+										},
+										"table_name": {
+											"type": "String",
+											"value": "test3"
+										}
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "dst_sql_test",
+									"type": "DatasetReference"
+								}
+							}
 						}
 					]
 				}
