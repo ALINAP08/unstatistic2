@@ -2,10 +2,32 @@
 	"name": "AzureSqlTable2",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "testkeyAzureSqlDatabase",
+			"referenceName": "AzureSqlDatabase1",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"secretkey": "newttestserver-firstdbtest-key"
+				"DBName": {
+					"value": "@dataset().DBName_look",
+					"type": "Expression"
+				},
+				"ServerName": {
+					"value": "@dataset().ServerName_look",
+					"type": "Expression"
+				},
+				"secretKey": {
+					"value": "@dataset().secretKey_look",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"DBName_look": {
+				"type": "String"
+			},
+			"ServerName_look": {
+				"type": "String"
+			},
+			"secretKey_look": {
+				"type": "String"
 			}
 		},
 		"annotations": [],
