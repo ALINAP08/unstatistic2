@@ -3,10 +3,37 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "testkeyAzureSqlDatabase",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"secretkey": {
+					"value": "@dataset().secur_key",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"secur_key": {
+				"type": "String"
+			},
+			"table_schema": {
+				"type": "String"
+			},
+			"table_name": {
+				"type": "String"
+			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": []
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().table_schema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().table_name",
+				"type": "Expression"
+			}
+		}
 	}
 }
