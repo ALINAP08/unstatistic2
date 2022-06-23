@@ -67,7 +67,7 @@
 							"typeProperties": {
 								"source": {
 									"type": "SqlServerSource",
-									"sqlReaderQuery": "Select * from dbo.cfgSubmissionInfo where FileHandle=1\r\nUnion all\r\nSelect * from dbo.cfgSubmissionInfo where FileHandle=2",
+									"sqlReaderQuery": "Select * from dbo.cfgSubmissionInfo where FileHandle=1",
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
