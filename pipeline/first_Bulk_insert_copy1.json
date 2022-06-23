@@ -69,77 +69,77 @@
 								"storedProcedureParameters": {
 									"AmountColumn": {
 										"value": {
-											"value": "@activity('Lookup1').output.AmountColumn",
+											"value": "@activity('Lookup1').output.value.AmountColumn",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"Check_Existence": {
 										"value": {
-											"value": "@activity('Lookup1').output.Check_Existence",
+											"value": "@activity('Lookup1').output.value.Check_Existence",
 											"type": "Expression"
 										},
 										"type": "Byte[]"
 									},
 									"ClearTable": {
 										"value": {
-											"value": "@activity('Lookup1').output.ClearTable",
+											"value": "@activity('Lookup1').output.value.ClearTable",
 											"type": "Expression"
 										},
 										"type": "Byte[]"
 									},
 									"FileHandle": {
 										"value": {
-											"value": "@activity('Lookup1').output.FileHandle",
+											"value": "@activity('Lookup1').output.value.FileHandle",
 											"type": "Expression"
 										},
 										"type": "Int32"
 									},
 									"FirstRow": {
 										"value": {
-											"value": "@activity('Lookup1').output.FirstRows",
+											"value": "@activity('Lookup1').output.value.FirstRows",
 											"type": "Expression"
 										},
 										"type": "Int32"
 									},
 									"FormatFileName": {
 										"value": {
-											"value": "@activity('Lookup1').output.FormatFileName",
+											"value": "@activity('Lookup1').output.value.FormatFileName",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"FormatFilePath": {
 										"value": {
-											"value": "@activity('Lookup1').output.FormatFilePath",
+											"value": "@activity('Lookup1').output.value.FormatFilePath",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"PostDate": {
 										"value": {
-											"value": "@activity('Lookup1').output.PostDate",
+											"value": "@activity('Lookup1').output.value.PostDate",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"RawFileName": {
 										"value": {
-											"value": "@activity('Lookup1').output.RawFileName",
+											"value": "@activity('Lookup1').output.value.RawFileName",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"RawFilePath": {
 										"value": {
-											"value": "@activity('Lookup1').output.FilePath",
+											"value": "@activity('Lookup1').output.value.FilePath",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"RawTableName": {
 										"value": {
-											"value": "@activity('Lookup1').output.TableName",
+											"value": "@activity('Lookup1').output.value.TableName",
 											"type": "Expression"
 										},
 										"type": "String"
