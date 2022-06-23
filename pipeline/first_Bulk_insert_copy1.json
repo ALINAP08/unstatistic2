@@ -47,7 +47,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup for Atb_copy1').output",
+						"value": "@activity('Lookup for Atb_copy1').output.value",
 						"type": "Expression"
 					},
 					"isSequential": false,
@@ -202,6 +202,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT * from [dbo].[cfgSubmissionInfo]\n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
