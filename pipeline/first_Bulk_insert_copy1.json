@@ -3,37 +3,6 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Send mail about Fail 2",
-				"description": "Send mail about \"Fail\" Bulk insert procedure for Atb data",
-				"type": "WebActivity",
-				"dependsOn": [
-					{
-						"activity": "ForEach1",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
-					"method": "POST",
-					"body": {
-						"message": "Bulk insert procedure for Atb data was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
-						"dataFactoryName": "@{pipeline().DataFactory}",
-						"pipelineName": "@{pipeline().Pipeline}",
-						"receiver": "@{pipeline().parameters.receiver}"
-					}
-				}
-			},
-			{
 				"name": "ForEach1",
 				"type": "ForEach",
 				"dependsOn": [
@@ -181,12 +150,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"receiver": {
-				"type": "string",
-				"defaultValue": "alina_parkhomenko@epam.com"
-			}
-		},
 		"folder": {
 			"name": "ETL"
 		},
