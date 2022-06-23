@@ -53,7 +53,7 @@
 					"isSequential": false,
 					"activities": [
 						{
-							"name": "Bulk insert for Atb_copy1_copy1_copy1",
+							"name": "Bulk insert for",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [],
 							"policy": {
