@@ -139,14 +139,14 @@
 									},
 									"RawFilePath": {
 										"value": {
-											"value": "@activity('Lookup1').output.firstRow.RawFilePath",
+											"value": "@activity('Lookup1').output.firstRow.FilePath",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"RawTableName": {
 										"value": {
-											"value": "@activity('Lookup1').output.firstRow.RawTableName",
+											"value": "@activity('Lookup1').output.firstRow.TableName",
 											"type": "Expression"
 										},
 										"type": "String"
