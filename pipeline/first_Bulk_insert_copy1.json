@@ -69,77 +69,77 @@
 								"storedProcedureParameters": {
 									"AmountColumn": {
 										"value": {
-											"value": "@activity('Lookup1').output.value.AmountColumn",
+											"value": "@item().value.AmountColumn",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"Check_Existence": {
 										"value": {
-											"value": "@activity('Lookup1').output.value.Check_Existence",
+											"value": "@item().value.Check_Existence",
 											"type": "Expression"
 										},
 										"type": "Byte[]"
 									},
 									"ClearTable": {
 										"value": {
-											"value": "@activity('Lookup1').output.value.ClearTable",
+											"value": "@item().value.ClearTable",
 											"type": "Expression"
 										},
 										"type": "Byte[]"
 									},
 									"FileHandle": {
 										"value": {
-											"value": "@activity('Lookup1').output.value.FileHandle",
+											"value": "@item().value.FileHandle",
 											"type": "Expression"
 										},
 										"type": "Int32"
 									},
 									"FirstRow": {
 										"value": {
-											"value": "@activity('Lookup1').output.value.FirstRows",
+											"value": "@item().value.FirstRows",
 											"type": "Expression"
 										},
 										"type": "Int32"
 									},
 									"FormatFileName": {
 										"value": {
-											"value": "@activity('Lookup1').output.value.FormatFileName",
+											"value": "@item().value.FormatFileName",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"FormatFilePath": {
 										"value": {
-											"value": "@activity('Lookup1').output.value.FormatFilePath",
+											"value": "@item().value.FormatFilePath",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"PostDate": {
 										"value": {
-											"value": "@activity('Lookup1').output.value.PostDate",
+											"value": "@item().value.PostDate",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"RawFileName": {
 										"value": {
-											"value": "@activity('Lookup1').output.value.RawFileName",
+											"value": "@item().value.RawFileName",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"RawFilePath": {
 										"value": {
-											"value": "@activity('Lookup1').output.value.FilePath",
+											"value": "@item().value.FilePath",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"RawTableName": {
 										"value": {
-											"value": "@activity('Lookup1').output.value.TableName",
+											"value": "@item().value.TableName",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -178,6 +178,112 @@
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Bulk insert for Atb_copy1_copy1_copy1_copy1",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Send mail about Fail 2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_BULK]",
+					"storedProcedureParameters": {
+						"AmountColumn": {
+							"value": {
+								"value": "@activity('Lookup1').output.value.AmountColumn",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Check_Existence": {
+							"value": {
+								"value": "@activity('Lookup1').output.value.Check_Existence",
+								"type": "Expression"
+							},
+							"type": "Byte[]"
+						},
+						"ClearTable": {
+							"value": {
+								"value": "@activity('Lookup1').output.value.ClearTable",
+								"type": "Expression"
+							},
+							"type": "Byte[]"
+						},
+						"FileHandle": {
+							"value": {
+								"value": "@activity('Lookup1').output.value.FileHandle",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						},
+						"FirstRow": {
+							"value": {
+								"value": "@activity('Lookup1').output.value.FirstRows",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						},
+						"FormatFileName": {
+							"value": {
+								"value": "@activity('Lookup1').output.value.FormatFileName",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"FormatFilePath": {
+							"value": {
+								"value": "@activity('Lookup1').output.value.FormatFilePath",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"PostDate": {
+							"value": {
+								"value": "@activity('Lookup1').output.value.PostDate",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"RawFileName": {
+							"value": {
+								"value": "@activity('Lookup1').output.value.RawFileName",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"RawFilePath": {
+							"value": {
+								"value": "@activity('Lookup1').output.value.FilePath",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"RawTableName": {
+							"value": {
+								"value": "@activity('Lookup1').output.value.TableName",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "localsqldb",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
