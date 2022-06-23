@@ -850,113 +850,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Bulk insert for Atb",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "Lookup for Atb",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_BULK]",
-							"storedProcedureParameters": {
-								"AmountColumn": {
-									"value": {
-										"value": "@activity('Lookup for Atb').output.firstRow.AmountColumn",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"Check_Existence": {
-									"value": {
-										"value": "@activity('Lookup for Atb').output.firstRow.Check_Existence",
-										"type": "Expression"
-									},
-									"type": "Byte[]"
-								},
-								"ClearTable": {
-									"value": {
-										"value": "@activity('Lookup for Atb').output.firstRow.ClearTable",
-										"type": "Expression"
-									},
-									"type": "Byte[]"
-								},
-								"FileHandle": {
-									"value": {
-										"value": "@activity('Lookup for Atb').output.firstRow.FileHandle",
-										"type": "Expression"
-									},
-									"type": "Int32"
-								},
-								"FirstRow": {
-									"value": {
-										"value": "@activity('Lookup for Atb').output.firstRow.FirstRows",
-										"type": "Expression"
-									},
-									"type": "Int32"
-								},
-								"FormatFileName": {
-									"value": {
-										"value": "@activity('Lookup for Atb').output.firstRow.FormatFileName",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"FormatFilePath": {
-									"value": {
-										"value": "@activity('Lookup for Atb').output.firstRow.FormatFilePath",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"PostDate": {
-									"value": {
-										"value": "@string(activity('Lookup for Atb').output.firstRow.PostDate_ID)",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"RawFileName": {
-									"value": {
-										"value": "@activity('Lookup for Atb').output.firstRow.RawFileName",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"RawFilePath": {
-									"value": {
-										"value": "@activity('Lookup for Atb').output.firstRow.FilePath",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"RawTableName": {
-									"value": {
-										"value": "@activity('Lookup for Atb').output.firstRow.TableName",
-										"type": "Expression"
-									},
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "localsqldb",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Lookup for Atb",
+						"name": "Lookup1",
 						"type": "Lookup",
 						"dependsOn": [
 							{
@@ -977,7 +871,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlServerSource",
-								"sqlReaderQuery": "SELECT *\r\nFROM [dbo].[cfgSubmissionInfo] \r\nWHERE [FileHandle]=1\r\n",
+								"sqlReaderQuery": "SELECT *\nFROM [dbo].[cfgSubmissionInfo] \n\n",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -986,329 +880,9 @@
 								"type": "DatasetReference",
 								"parameters": {}
 							},
-							"firstRowOnly": true
+							"firstRowOnly": false
 						}
 					},
-					{
-						"name": "Insert to cfgSubmissionInfo",
-						"type": "Script",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "localsqldb",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "NonQuery",
-									"text": "WITH datefield AS (\nSELECT GETDATE()-1 AS PD,\n    FORMAT((GETDATE()-1), 'yyyyMMdd', 'en-us') AS PD_ID\n    )\n\nINSERT INTO [dbo].[cfgSubmissionInfo] ( \n        [FileHandle]\n        ,[PostDate]\n        ,[PostDate_ID]\n        ,[FormatFileName]\n        ,[FormatFilePath]\n        ,[TableName]\n        ,[RawFileName]\n        ,[FilePath]\n        ,[AmountColumn]\n        ,[FirstRows]\n    )\nSELECT \n    1 AS FileHandle,\n    PD AS PostDate,\n    PD_ID AS PostDate_ID,\n    'formatF_7.txt' AS FormatFileName,\n    'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\TASk_7' AS FormatFilePath,\n    '_rawATB' AS TableName,\n    CONCAT('Account_',MONTH(PD),'.',DAY(PD),'.',YEAR(PD),'.txt') AS RawFileName,\n    'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\TASk_7' AS rawFilePath,\n    'CurrentBalance' AS AmountColumn,\n    2 AS FirstRows\nFROM datefield\nUNION ALL\nSELECT \n    2 AS FileHandle,\n    PD AS PostDate,\n    PD_ID AS PostDate_ID  ,\n    'formatF_7_txn_chr.txt' AS  FormatFileName,\n    'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\TASk_7' AS FormatFilePath,\n    '_rawTXNS_CHGS' AS TableName,\n    CONCAT('Transaction-Charge__',MONTH(PD),'.',DAY(PD),'.',YEAR(PD),'.txt') AS RawFileName,\n    'C:\\Users\\Alina_Parkhomenko\\Desktop\\study\\BI__\\TASk_7' AS rawFilePath,\n    'TxnAmount' AS AmountColumn,\n    2 AS FirstRows\nFROM datefield;\n\n"
-								}
-							]
-						}
-					},
-					{
-						"name": "Lookup for TxnChar",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "Send mail about Successed 1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderQuery": "SELECT *\r\nFROM [dbo].[cfgSubmissionInfo] \r\nWHERE [FileHandle]=2\r\n",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "SqlServerTable1",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": true
-						}
-					},
-					{
-						"name": "Bulk insert for TxnChar",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "Lookup for TxnChar",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_BULK]",
-							"storedProcedureParameters": {
-								"AmountColumn": {
-									"value": {
-										"value": "@activity('Lookup for TxnChar').output.firstRow.AmountColumn",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"Check_Existence": {
-									"value": {
-										"value": "@activity('Lookup for TxnChar').output.firstRow.Check_Existence",
-										"type": "Expression"
-									},
-									"type": "Byte[]"
-								},
-								"ClearTable": {
-									"value": {
-										"value": "@activity('Lookup for TxnChar').output.firstRow.ClearTable",
-										"type": "Expression"
-									},
-									"type": "Byte[]"
-								},
-								"FileHandle": {
-									"value": {
-										"value": "@activity('Lookup for TxnChar').output.firstRow.FileHandle",
-										"type": "Expression"
-									},
-									"type": "Int32"
-								},
-								"FirstRow": {
-									"value": {
-										"value": "@activity('Lookup for TxnChar').output.firstRow.FirstRows",
-										"type": "Expression"
-									},
-									"type": "Int32"
-								},
-								"FormatFileName": {
-									"value": {
-										"value": "@activity('Lookup for TxnChar').output.firstRow.FormatFileName",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"FormatFilePath": {
-									"value": {
-										"value": "@activity('Lookup for TxnChar').output.firstRow.FormatFilePath",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"PostDate": {
-									"value": {
-										"value": "@string(activity('Lookup for TxnChar').output.firstRow.PostDate_ID)",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"RawFileName": {
-									"value": {
-										"value": "@activity('Lookup for TxnChar').output.firstRow.RawFileName",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"RawFilePath": {
-									"value": {
-										"value": "@activity('Lookup for TxnChar').output.firstRow.FilePath",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"RawTableName": {
-									"value": {
-										"value": "@activity('Lookup for TxnChar').output.firstRow.TableName",
-										"type": "Expression"
-									},
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "localsqldb",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Send mail about Successed 1",
-						"description": "Send mail about Successed Insert to cfgSubmissionInfo and started ETL Process.",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "Insert to cfgSubmissionInfo",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
-							"method": "POST",
-							"headers": {},
-							"body": {
-								"message": "ETL Process was started. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
-								"dataFactoryName": "@{pipeline().DataFactory}",
-								"pipelineName": "@{pipeline().Pipeline}",
-								"receiver": "@{pipeline().parameters.receiver}"
-							}
-						}
-					},
-					{
-						"name": "Send mail about Fail 1",
-						"description": "Send mail about Fail Insert to cfgSubmissionInfo",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "Insert to cfgSubmissionInfo",
-								"dependencyConditions": [
-									"Failed"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
-							"method": "POST",
-							"headers": {},
-							"body": {
-								"message": "This object was added earlier. ETL process didn't start. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
-								"dataFactoryName": "@{pipeline().DataFactory}",
-								"pipelineName": "@{pipeline().Pipeline}",
-								"receiver": "@{pipeline().parameters.receiver}"
-							}
-						}
-					},
-					{
-						"name": "Send mail about Fail 2",
-						"description": "Send mail about \"Fail\" Bulk insert procedure for Atb data",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "Bulk insert for Atb",
-								"dependencyConditions": [
-									"Failed"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
-							"method": "POST",
-							"headers": {},
-							"body": {
-								"message": "Bulk insert procedure for Atb data was FAILED. This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
-								"dataFactoryName": "@{pipeline().DataFactory}",
-								"pipelineName": "@{pipeline().Pipeline}",
-								"receiver": "@{pipeline().parameters.receiver}"
-							}
-						}
-					},
-					{
-						"name": "Send mail about Fail 3",
-						"description": "Send mail about \"Fail\" Bulk insert procedure for TxnChar data",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "Bulk insert for TxnChar",
-								"dependencyConditions": [
-									"Failed"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://prod-36.northeurope.logic.azure.com:443/workflows/5e14d7532c934efb967b64d4eb6b97f9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t_y49xgm25kdUxJeG10AAWU4nZDTCzeT6rbcRlnKpGQ",
-							"method": "POST",
-							"headers": {},
-							"body": {
-								"message": "Bulk insert procedure for TxnChar data was FAILED.  This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.",
-								"dataFactoryName": "@{pipeline().DataFactory}",
-								"pipelineName": "@{pipeline().Pipeline}",
-								"receiver": "@{pipeline().parameters.receiver}"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"receiver": {
-						"type": "string",
-						"defaultValue": "alina_parkhomenko@epam.com"
-					}
-				},
-				"folder": {
-					"name": "ETL"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/localsqldb')]",
-				"[concat(variables('factoryId'), '/datasets/SqlServerTable1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/first_Bulk_insert_copy1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
 					{
 						"name": "Insert to cfgSubmissionInfo",
 						"type": "Script",
@@ -1435,7 +1009,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Lookup for Atb",
+								"activity": "Lookup1",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1444,225 +1018,15 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup for Atb').output.value",
+								"value": "@activity('Lookup1').output.value",
 								"type": "Expression"
 							},
 							"isSequential": false,
 							"activities": [
 								{
-									"name": "AmountColumn",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "AmountColumn",
-										"value": {
-											"value": "@string(activity('Lookup for Atb').output.AmountColumn)",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "Check_Existence",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "Check_Existence",
-										"value": {
-											"value": "@string(activity('Lookup for Atb').output.Check_Existence)",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "ClearTable",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "ClearTable",
-										"value": {
-											"value": "@string(activity('Lookup for Atb').output.ClearTable)",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "FileHandle",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "FileHandle",
-										"value": {
-											"value": "@string(activity('Lookup for Atb').output.FileHandle)",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "FirstRow",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "FirstRow",
-										"value": {
-											"value": "@string(activity('Lookup for Atb').output.FirstRows)",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "FormatFilePath",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "FormatFilePath",
-										"value": {
-											"value": "@string(activity('Lookup for Atb').output.FormatFilePath)",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "FormatFileName",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "FormatFileName",
-										"value": {
-											"value": "@string(activity('Lookup for Atb').output.FormatFileName)",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "PostDate",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "PostDate",
-										"value": {
-											"value": "@string(activity('Lookup for Atb').output.PostDate_ID)",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "RawFileName",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "RawFileName",
-										"value": {
-											"value": "@string(activity('Lookup for Atb').output.RawFileName)",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "RawFilePath",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "RawFilePath",
-										"value": {
-											"value": "@string(activity('Lookup for Atb').output.FilePath)",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "RawTableName",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "RawTableName",
-										"value": {
-											"value": "@string(activity('Lookup for Atb').output.TableName)",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "Bulk insert for Atb_copy1",
+									"name": "Bulk insert for",
 									"type": "SqlServerStoredProcedure",
-									"dependsOn": [
-										{
-											"activity": "AmountColumn",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										},
-										{
-											"activity": "Check_Existence",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										},
-										{
-											"activity": "ClearTable",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										},
-										{
-											"activity": "FileHandle",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										},
-										{
-											"activity": "FirstRow",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										},
-										{
-											"activity": "FormatFileName",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										},
-										{
-											"activity": "FormatFilePath",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										},
-										{
-											"activity": "PostDate",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										},
-										{
-											"activity": "RawFileName",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										},
-										{
-											"activity": "RawFilePath",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										},
-										{
-											"activity": "RawTableName",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
+									"dependsOn": [],
 									"policy": {
 										"timeout": "7.00:00:00",
 										"retry": 0,
@@ -1676,77 +1040,77 @@
 										"storedProcedureParameters": {
 											"AmountColumn": {
 												"value": {
-													"value": "@variables('AmountColumn')",
+													"value": "@item().AmountColumn",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"Check_Existence": {
 												"value": {
-													"value": "@variables('Check_Existence')",
+													"value": "@item().Check_Existence",
 													"type": "Expression"
 												},
 												"type": "Byte[]"
 											},
 											"ClearTable": {
 												"value": {
-													"value": "@variables('ClearTable')",
+													"value": "@item().ClearTable",
 													"type": "Expression"
 												},
 												"type": "Byte[]"
 											},
 											"FileHandle": {
 												"value": {
-													"value": "@variables('FileHandle')",
+													"value": "@item().FileHandle",
 													"type": "Expression"
 												},
 												"type": "Int32"
 											},
 											"FirstRow": {
 												"value": {
-													"value": "@variables('FirstRow')",
+													"value": "@item().FirstRows",
 													"type": "Expression"
 												},
 												"type": "Int32"
 											},
 											"FormatFileName": {
 												"value": {
-													"value": "@variables('FormatFileName')",
+													"value": "@item().FormatFileName",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"FormatFilePath": {
 												"value": {
-													"value": "@variables('FormatFilePath')",
+													"value": "@item().FormatFilePath",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"PostDate": {
 												"value": {
-													"value": "@variables('PostDate')",
+													"value": "@item().PostDate",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"RawFileName": {
 												"value": {
-													"value": "@variables('RawFileName')",
+													"value": "@item().RawFileName",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"RawFilePath": {
 												"value": {
-													"value": "@variables('RawFilePath')",
+													"value": "@item().FilePath",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"RawTableName": {
 												"value": {
-													"value": "@variables('RawTableName')",
+													"value": "@item().TableName",
 													"type": "Expression"
 												},
 												"type": "String"
@@ -1760,40 +1124,6 @@
 								}
 							]
 						}
-					},
-					{
-						"name": "Lookup for Atb",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "Send mail about Successed 1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderQuery": "SELECT *\nFROM [dbo].[cfgSubmissionInfo] \n\n",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "SqlServerTable1",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
 					}
 				],
 				"policy": {
@@ -1806,49 +1136,14 @@
 						"defaultValue": "alina_parkhomenko@epam.com"
 					}
 				},
-				"variables": {
-					"AmountColumn": {
-						"type": "String"
-					},
-					"Check_Existence": {
-						"type": "String"
-					},
-					"ClearTable": {
-						"type": "String"
-					},
-					"FileHandle": {
-						"type": "String"
-					},
-					"FirstRow": {
-						"type": "String"
-					},
-					"FormatFileName": {
-						"type": "String"
-					},
-					"FormatFilePath": {
-						"type": "String"
-					},
-					"PostDate": {
-						"type": "String"
-					},
-					"RawFileName": {
-						"type": "String"
-					},
-					"RawFilePath": {
-						"type": "String"
-					},
-					"RawTableName": {
-						"type": "String"
-					}
-				},
 				"folder": {
 					"name": "ETL"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/localsqldb')]",
-				"[concat(variables('factoryId'), '/datasets/SqlServerTable1')]"
+				"[concat(variables('factoryId'), '/datasets/SqlServerTable1')]",
+				"[concat(variables('factoryId'), '/linkedServices/localsqldb')]"
 			]
 		},
 		{
@@ -2130,14 +1425,210 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT 'newttestserver-firstdbtest-key' AS 'secretkey','dbo' AS schema_tabName, 'test3' AS tablename\nUNION ALL\nSELECT 'newtwotestswerver-seconddbtest-key' AS 'secretkey','dbo' AS schema_tabName , 'test3' AS tablename",
+								"sqlReaderQuery": "SELECT 'newttestserver-firstdbtest-key' AS 'secretkey','dbo' AS schema_tabName, 'test1' AS tablename\nUNION ALL\nSELECT 'newtwotestswerver-seconddbtest-key' AS 'secretkey','dbo' AS schema_tabName , 'test2' AS tablename",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "testnew",
+								"type": "DatasetReference",
+								"parameters": {
+									"secretkey": "newttestserver-firstdbtest-key"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup1').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Copy data1",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "Lookup1_copy1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": {
+												"value": "@{item().tablename}",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"value": "@json(activity('Lookup1_copy1').output.firstrow.json_output)\n",
+											"type": "Expression"
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "src_csv_new",
+											"type": "DatasetReference",
+											"parameters": {
+												"Container": "unstaticcontapp",
+												"FileName": "new.csv"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "AzureSqlTable3",
+											"type": "DatasetReference",
+											"parameters": {
+												"secur_key": {
+													"value": "@item().secretkey",
+													"type": "Expression"
+												},
+												"table_schema": {
+													"value": "@item().schema_tabName",
+													"type": "Expression"
+												},
+												"table_name": {
+													"value": "@item().tablename",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "Lookup1_copy1",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderStoredProcedureName": "[[dbo].[sp_getColumnMapping]",
+											"storedProcedureParameters": {
+												"schema_name": {
+													"type": "String",
+													"value": {
+														"value": "@item().schema_tabName",
+														"type": "Expression"
+													}
+												},
+												"table_name": {
+													"type": "String",
+													"value": {
+														"value": "@item().tablename",
+														"type": "Expression"
+													}
+												}
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "dst_sql_test",
+											"type": "DatasetReference",
+											"parameters": {}
+										},
+										"firstRowOnly": true
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/testnew')]",
+				"[concat(variables('factoryId'), '/datasets/src_csv_new')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable3')]",
+				"[concat(variables('factoryId'), '/datasets/dst_sql_test')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1_copy1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT 'newttestserver-firstdbtest-key' AS 'secretKey_look','dbo' AS schema_tabName, 'test3' AS tablename,'firstdbtest' as DBName_look,'newttestserver.database.windows.net' as ServerName_look\nUNION ALL\nSELECT 'newtwotestswerver-seconddbtest-key' AS 'secretKey_look','dbo' AS schema_tabName , 'test3' AS tablename,'seconddbtest' as DBName_look,'newtwotestswerver.database.windows.net' as ServerName_look",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "AzureSqlTable2",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"DBName_look": "firstdbtest",
+									"ServerName_look": "newttestserver.database.windows.net",
+									"secretKey_look": "newttestserver-firstdbtest-key"
+								}
 							},
 							"firstRowOnly": false
 						}
@@ -4284,7 +3775,21 @@
 					"referenceName": "testkeyAzureSqlDatabase",
 					"type": "LinkedServiceReference",
 					"parameters": {
-						"secretkey": "newttestserver-firstdbtest-key"
+						"secretkey": {
+							"value": "@dataset().secretKey_look",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"DBName_look": {
+						"type": "String"
+					},
+					"ServerName_look": {
+						"type": "String"
+					},
+					"secretKey_look": {
+						"type": "String"
 					}
 				},
 				"annotations": [],
@@ -4717,6 +4222,35 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/unstatisticuploadapp')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/testnew')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "testkeyAzureSqlDatabase",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"secretkey": {
+							"value": "@dataset().secretkey",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"secretkey": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/testkeyAzureSqlDatabase')]"
 			]
 		},
 		{
