@@ -1972,6 +1972,9 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
+				"folder": {
+					"name": "for KGND"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -1999,18 +2002,22 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT 'newttestserver-firstdbtest-key' AS 'secretKey_look','dbo' AS schema_tabName, 'test3' AS tablename,'firstdbtest' as DBName_look,'newttestserver.database.windows.net' as ServerName_look\nUNION ALL\nSELECT 'newtwotestswerver-seconddbtest-key' AS 'secretKey_look','dbo' AS schema_tabName , 'test3' AS tablename,'seconddbtest' as DBName_look,'newtwotestswerver.database.windows.net' as ServerName_look",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
 							},
 							"dataset": {
-								"referenceName": "AzureSqlTable2",
+								"referenceName": "src_csv_new",
 								"type": "DatasetReference",
 								"parameters": {
-									"DBName_look": "firstdbtest",
-									"ServerName_look": "newttestserver.database.windows.net",
-									"secretKey_look": "newttestserver-firstdbtest-key"
+									"Container": "forkgnd",
+									"FileName": "metafile.csv"
 								}
 							},
 							"firstRowOnly": false
@@ -2033,6 +2040,7 @@
 								"value": "@activity('Lookup1').output.value",
 								"type": "Expression"
 							},
+							"isSequential": false,
 							"activities": [
 								{
 									"name": "Copy data1",
@@ -2077,7 +2085,7 @@
 										},
 										"enableStaging": false,
 										"translator": {
-											"value": "@json(activity('Lookup1_copy1').output.firstRow.json_output)",
+											"value": "@json(activity('Lookup1_copy1').output.firstrow.json_output)\n",
 											"type": "Expression"
 										}
 									},
@@ -2131,11 +2139,17 @@
 											"storedProcedureParameters": {
 												"schema_name": {
 													"type": "String",
-													"value": "dbo"
+													"value": {
+														"value": "@item().schema_tabName",
+														"type": "Expression"
+													}
 												},
 												"table_name": {
 													"type": "String",
-													"value": "test3"
+													"value": {
+														"value": "@item().tablename",
+														"type": "Expression"
+													}
 												}
 											},
 											"queryTimeout": "02:00:00",
@@ -2145,7 +2159,8 @@
 											"referenceName": "dst_sql_test",
 											"type": "DatasetReference",
 											"parameters": {}
-										}
+										},
+										"firstRowOnly": true
 									}
 								}
 							]
@@ -2156,10 +2171,12 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
+				"folder": {
+					"name": "for KGND"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/AzureSqlTable2')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTable3')]"
 			]
 		},
