@@ -181,7 +181,7 @@
 									"referenceName": "SqlServerTable1",
 									"type": "DatasetReference"
 								},
-								"firstRowOnly": true
+								"firstRowOnly": false
 							}
 						}
 					]
