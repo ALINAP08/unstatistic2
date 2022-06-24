@@ -1,0 +1,20 @@
+{
+	"name": "Parquet1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "unstatisticuploadapp",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "test.Parquet",
+				"container": "unstaticcontapp"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
