@@ -73,7 +73,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"filename": {
-											"value": "@activity('Lookup1').output.value.entity",
+											"value": "@activity('Lookup1').output.Entity",
 											"type": "Expression"
 										}
 									}
