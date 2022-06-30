@@ -110,7 +110,7 @@
 						"referenceName": "synd_poc_dev_sql_meta",
 						"type": "DatasetReference",
 						"parameters": {
-							"pram_gbl_secret_key": "Nfield-US"
+							"secretnamr": "Nfield-US"
 						}
 					},
 					"firstRowOnly": false
