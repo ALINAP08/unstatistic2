@@ -116,7 +116,7 @@
 						"referenceName": "synd_poc_dev_sql_meta",
 						"type": "DatasetReference",
 						"parameters": {
-							"prag_gbl_secret": "Nfield-EU"
+							"Name": "Nfield-US"
 						}
 					},
 					"firstRowOnly": false
