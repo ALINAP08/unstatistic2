@@ -64,7 +64,10 @@
 							"inputs": [
 								{
 									"referenceName": "synd_poc_dev_sql_meta",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"secretname": "Nfield-US"
+									}
 								}
 							],
 							"outputs": [
@@ -108,10 +111,7 @@
 					},
 					"dataset": {
 						"referenceName": "synd_poc_dev_sql_meta",
-						"type": "DatasetReference",
-						"parameters": {
-							"secretnamr": "Nfield-US"
-						}
+						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
 				}
