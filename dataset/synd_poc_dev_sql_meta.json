@@ -5,7 +5,15 @@
 			"referenceName": "lnk_synd_poc_dev_sql2",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"pram_gbl_secret_key": "Nfield-US"
+				"pram_gbl_secret_key": {
+					"value": "@dataset().prag_gbl_secret",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"prag_gbl_secret": {
+				"type": "String"
 			}
 		},
 		"annotations": [],
