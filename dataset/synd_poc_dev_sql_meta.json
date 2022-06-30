@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference",
 			"parameters": {
 				"pram_gbl_secret_key": {
-					"value": "@dataset().Name",
+					"value": "@dataset().pram_gbl_secret_key",
 					"type": "Expression"
 				}
 			}
