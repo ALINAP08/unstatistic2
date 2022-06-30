@@ -73,7 +73,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"filename": {
-											"value": "@concat(activity('Lookup1').output.ID,'.parque')",
+											"value": "@concat(item().ID,'.parque')",
 											"type": "Expression"
 										}
 									}
@@ -98,7 +98,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT Entity,\n\t[Query]\nFROM [meta].[etl_nfield_metadata]",
+						"sqlReaderQuery": "SELECT ID,\n\t[Query]\nFROM [meta].[etl_nfield_metadata]",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
