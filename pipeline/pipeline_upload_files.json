@@ -64,13 +64,7 @@
 							"inputs": [
 								{
 									"referenceName": "synd_poc_dev_sql_meta",
-									"type": "DatasetReference",
-									"parameters": {
-										"Name": {
-											"value": "@item().Name",
-											"type": "Expression"
-										}
-									}
+									"type": "DatasetReference"
 								}
 							],
 							"outputs": [
@@ -116,7 +110,7 @@
 						"referenceName": "synd_poc_dev_sql_meta",
 						"type": "DatasetReference",
 						"parameters": {
-							"Name": "Nfield-US"
+							"pram_gbl_secret_key": "Nfield-US"
 						}
 					},
 					"firstRowOnly": false
