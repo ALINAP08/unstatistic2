@@ -4,7 +4,7 @@
 		"activities": [
 			{
 				"name": "Copy_meta_etl_nfield_metadata",
-				"description": "Copy table [meta].[etl_nfield_databases] to file",
+				"description": "Copy table [meta].[etl_nfield_metadata] to file",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
