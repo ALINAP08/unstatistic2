@@ -117,7 +117,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"prag_gbl_secret": {
-											"value": "@activity('Lookup1').output.value.Name",
+											"value": "@activity('Lookup2').output.value.Name",
 											"type": "Expression"
 										}
 									}
@@ -178,7 +178,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT ID,\n\t[Query]\nFROM [meta].[etl_nfield_metadata]",
+						"sqlReaderQuery": "SELECT \n\tt1.[Query] as Query, t2.name as secretname, concat(t2.name, '_',t1.ID) as filename\nFROM [meta].[etl_nfield_metadata] t1\n\nleft join  [meta].[etl_nfield_databases] t2\non t1.IsEnabled=t2.IsEnabled",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
