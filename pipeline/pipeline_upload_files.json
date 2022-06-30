@@ -66,8 +66,8 @@
 									"referenceName": "synd_poc_dev_sql_meta",
 									"type": "DatasetReference",
 									"parameters": {
-										"prag_gbl_secret": {
-											"value": "@item().secretname",
+										"Name": {
+											"value": "@item().Name",
 											"type": "Expression"
 										}
 									}
