@@ -14,9 +14,6 @@
 		"parameters": {
 			"prag_gbl_secret": {
 				"type": "String"
-			},
-			"Name": {
-				"type": "String"
 			}
 		},
 		"annotations": [],
