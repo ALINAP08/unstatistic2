@@ -1,0 +1,39 @@
+{
+	"name": "t1_pipeline_upload_files_",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup2",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "synd_poc_dev_sql_meta",
+						"type": "DatasetReference",
+						"parameters": {
+							"prag_gbl_secret": "Nfield-EU"
+						}
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"folder": {
+			"name": "for KGND"
+		},
+		"annotations": []
+	}
+}
