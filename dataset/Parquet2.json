@@ -8,6 +8,9 @@
 		"parameters": {
 			"filename": {
 				"type": "String"
+			},
+			"container_name": {
+				"type": "String"
 			}
 		},
 		"annotations": [],
@@ -19,7 +22,10 @@
 					"value": "@dataset().filename",
 					"type": "Expression"
 				},
-				"container": "unqmetaetl"
+				"container": {
+					"value": "@dataset().container_name",
+					"type": "Expression"
+				}
 			},
 			"compressionCodec": "snappy"
 		},
