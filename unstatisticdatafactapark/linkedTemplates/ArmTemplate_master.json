@@ -43,6 +43,10 @@
 			"type": "string",
 			"defaultValue": "https://unstatistickeyvault.vault.azure.net/"
 		},
+		"lnk_synd_poc_dev_sql2_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "@linkedService().pram_gbl_secret_key"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -96,6 +100,9 @@
 					},
 					"testkeyAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('testkeyAzureSqlDatabase_properties_typeProperties_connectionString_secretName')]"
+					},
+					"lnk_synd_poc_dev_sql2_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('lnk_synd_poc_dev_sql2_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
@@ -119,6 +126,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'unstatisticdatafactapark_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "unstatisticdatafactapark_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'unstatisticdatafactapark_ArmTemplate_1')]"
 			]
 		}
 	]

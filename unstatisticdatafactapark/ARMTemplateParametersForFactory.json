@@ -31,6 +31,9 @@
 		},
 		"unstatistic_key_properties_typeProperties_baseUrl": {
 			"value": "https://unstatistickeyvault.vault.azure.net/"
+		},
+		"lnk_synd_poc_dev_sql2_properties_typeProperties_connectionString_secretName": {
+			"value": "@linkedService().pram_gbl_secret_key"
 		}
 	}
 }
