@@ -43,7 +43,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "@item().Query",
+										"value": "@activity('Lookup2').output.value.Query",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -74,7 +74,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"prag_gbl_secret": {
-											"value": "@item().secretname",
+											"value": "@item().Name",
 											"type": "Expression"
 										}
 									}
@@ -86,11 +86,11 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"filename": {
-											"value": "@concat(item().filename,'.parquet')",
+											"value": "@concat(activity('Lookup2').output.value.ID,'.parquet')",
 											"type": "Expression"
 										},
 										"container_name": {
-											"value": "@item().container_name",
+											"value": "@item().Name\n",
 											"type": "Expression"
 										}
 									}
