@@ -98,7 +98,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT \n\t[Query]\nFROM [meta].[etl_nfield_metadata]",
+						"sqlReaderQuery": "SELECT Entity,\n\t[Query]\nFROM [meta].[etl_nfield_metadata]",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
