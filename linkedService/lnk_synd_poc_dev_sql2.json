@@ -1,6 +1,11 @@
 {
 	"name": "lnk_synd_poc_dev_sql2",
 	"properties": {
+		"parameters": {
+			"pram_gbl_secret_key": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "AzureSqlDatabase",
 		"typeProperties": {
