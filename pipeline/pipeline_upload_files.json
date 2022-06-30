@@ -74,7 +74,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"prag_gbl_secret": {
-											"value": "@activity('Lookup1').output.value.Name",
+											"value": "@activity('Lookup2').output.value.Name",
 											"type": "Expression"
 										}
 									}
@@ -86,7 +86,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"filename": {
-											"value": "@concat(item().ID,'.parque')",
+											"value": "@concat(item().filename,'.parque')",
 											"type": "Expression"
 										}
 									}
