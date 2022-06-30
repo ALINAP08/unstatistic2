@@ -114,7 +114,10 @@
 					},
 					"dataset": {
 						"referenceName": "synd_poc_dev_sql_meta",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"secretname": "Nfield-US"
+						}
 					},
 					"firstRowOnly": false
 				}
