@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Execute Pipeline1').output.value.activity('Lookup2').output",
+						"value": "@activity('Lookup2').output.value",
 						"type": "Expression"
 					},
 					"activities": [
@@ -120,7 +120,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"prag_gbl_secret": {
-											"value": "@activity('Execute Pipeline1').output.Name",
+											"value": "@item().Name",
 											"type": "Expression"
 										}
 									}
