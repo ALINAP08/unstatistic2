@@ -79,7 +79,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"filename": {
-											"value": "@concat(item().filename,'.parquet')",
+											"value": "@concat(item().ID,'.parquet')",
 											"type": "Expression"
 										},
 										"container_name": {
