@@ -1,0 +1,40 @@
+{
+	"name": "p1_pipeline_upload_files",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup2",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT \n\tt1.[Query] AS Query, t2.name AS secretname, concat(t2.name, '_',t1.ID) AS filename, LOWER(t2.name ) AS container_name\nFROM [meta].[etl_nfield_metadata] t1\n\nLEFT JOIN [meta].[etl_nfield_databases] t2\n\t\t\tON t1.IsEnabled=t2.IsEnabled\n\n\n",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlTable4",
+						"type": "DatasetReference",
+						"parameters": {
+							"secretname": "Nfield-US"
+						}
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"folder": {
+			"name": "for KGND"
+		},
+		"annotations": []
+	}
+}
