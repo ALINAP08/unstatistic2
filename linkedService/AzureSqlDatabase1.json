@@ -1,0 +1,25 @@
+{
+	"name": "AzureSqlDatabase1",
+	"properties": {
+		"parameters": {
+			"pram_gbl_secret_key": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "unstatistic_key",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": {
+					"value": "@linkedService().pram_gbl_secret_key",
+					"type": "Expression"
+				}
+			}
+		}
+	}
+}
