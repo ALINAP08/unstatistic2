@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy_meta_etl_nfield_metadata",
-				"description": "Copy table [meta].[etl_nfield_metadata] to file",
+				"name": "Copy_meta_etl_nfield_databases",
+				"description": "Copy table [meta].[etl_nfield_databases] to file",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
