@@ -6,13 +6,13 @@
 			"type": "LinkedServiceReference",
 			"parameters": {
 				"pram_gbl_secret_key": {
-					"value": "@dataset().prag_gbl_secret",
+					"value": "@dataset().Name",
 					"type": "Expression"
 				}
 			}
 		},
 		"parameters": {
-			"prag_gbl_secret": {
+			"Name": {
 				"type": "String"
 			}
 		},
