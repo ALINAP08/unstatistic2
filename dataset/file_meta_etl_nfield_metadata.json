@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "meta_etl_nfield_metadata.Parquet",
+				"fileName": "meta_etl_nfield_databases.Parquet",
 				"container": "unqmetaetl"
 			},
 			"compressionCodec": "snappy"
