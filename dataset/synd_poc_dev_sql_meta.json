@@ -1,0 +1,19 @@
+{
+	"name": "synd_poc_dev_sql_meta",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "lnk_synd_poc_dev_sql2",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"pram_gbl_secret_key": "Nfield-US"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "meta",
+			"table": "etl_nfield_databases"
+		}
+	}
+}
