@@ -1,0 +1,20 @@
+{
+	"name": "file_meta_etl_nfield_metadata",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "unstatisticuploadapp",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "meta_etl_nfield_metadata.Parquet",
+				"container": "unqmetaetl"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
