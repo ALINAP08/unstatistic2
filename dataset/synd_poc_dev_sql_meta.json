@@ -12,8 +12,8 @@
 			}
 		},
 		"parameters": {
-			"Name": {
-				"type": "String"
+			"pram_gbl_secret_key": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
