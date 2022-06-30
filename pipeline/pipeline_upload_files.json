@@ -23,14 +23,7 @@
 						{
 							"name": "Copy data1",
 							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "Lookup1_copy1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -92,38 +85,6 @@
 									}
 								}
 							]
-						},
-						{
-							"name": "Lookup1_copy1",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderQuery": "SELECT ID,\n\t[Query]\nFROM [meta].[etl_nfield_metadata]",
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "synd_poc_dev_sql_meta",
-									"type": "DatasetReference",
-									"parameters": {
-										"prag_gbl_secret": {
-											"value": "@activity('Lookup2').output.value.Name",
-											"type": "Expression"
-										}
-									}
-								},
-								"firstRowOnly": false
-							}
 						}
 					]
 				}
