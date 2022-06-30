@@ -67,7 +67,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"prag_gbl_secret": {
-											"value": "@activity('Lookup2').output.value.Name",
+											"value": "@activity('Lookup2').output.value.secretname",
 											"type": "Expression"
 										}
 									}
