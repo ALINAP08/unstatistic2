@@ -21,7 +21,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "meta",
-			"table": "etl_nfield_databases"
+			"table": "etl_nfield_metadata"
 		}
 	}
 }
