@@ -10,7 +10,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "meta",
-			"table": "etl_nfield_metadata"
+			"table": "etl_nfield_databases"
 		}
 	}
 }
