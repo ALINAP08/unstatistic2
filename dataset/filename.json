@@ -1,0 +1,34 @@
+{
+	"name": "filename",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "unstatisticuploadapp",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Name": {
+				"type": "String"
+			},
+			"filename": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@concat(dataset().filename,'.parquet')",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().Name",
+					"type": "Expression"
+				}
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
