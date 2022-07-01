@@ -1,9 +1,9 @@
 {
-	"name": "t1_pipeline_upload_files",
+	"name": "pipeline_upload_files_tables",
 	"properties": {
 		"activities": [
 			{
-				"name": "lkp_metadata1",
+				"name": "lkp_metadata",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -39,7 +39,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "lkp_metadata1",
+						"activity": "lkp_metadata",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -48,7 +48,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('lkp_metadata1').output.value",
+						"value": "@activity('lkp_metadata').output.value",
 						"type": "Expression"
 					},
 					"activities": [
