@@ -1,5 +1,5 @@
 {
-	"name": "t2_pipeline_upload_files",
+	"name": "pipeline_upload_files_dataset",
 	"properties": {
 		"activities": [
 			{
@@ -54,13 +54,13 @@
 					"isSequential": false,
 					"activities": [
 						{
-							"name": "Ex_pipelin_t1_pipeline_upload_files",
+							"name": "Ex_pipelin_t1_pipeline_upload_files_tables",
 							"type": "ExecutePipeline",
 							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "t1_pipeline_upload_files",
+									"referenceName": "pipeline_upload_files_tables",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
