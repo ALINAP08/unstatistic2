@@ -17,6 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"sqlReaderQuery": "Select *, Getdate() as filedate from [meta].etl_nfield_metadata",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -103,7 +104,7 @@
 								"type": "Expression"
 							},
 							"filename": {
-								"value": "@concat(activity('Lookup2').output.value.ID,'.parquet')",
+								"value": "@concat(activity('lkp_metadata1').output.value.filedate,'.parquet')",
 								"type": "Expression"
 							},
 							"Container": {
