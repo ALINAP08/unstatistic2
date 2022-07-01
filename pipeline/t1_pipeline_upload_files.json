@@ -1,5 +1,5 @@
 {
-	"name": "t2",
+	"name": "t1_pipeline_upload_files",
 	"properties": {
 		"activities": [
 			{
@@ -31,13 +31,6 @@
 									"type": "AzureSqlSource",
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "test2",
-									"type": "DatasetReference",
-									"parameters": {
-										"Name": "Nfield-US"
-									}
 								},
 								"firstRowOnly": false
 							}
@@ -80,28 +73,8 @@
 										"type": "ParquetWriteSettings"
 									}
 								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
+								"enableStaging": false
 							},
-							"inputs": [
-								{
-									"referenceName": "test2",
-									"type": "DatasetReference",
-									"parameters": {
-										"Name": {
-											"value": "@item().Name",
-											"type": "Expression"
-										}
-									}
-								}
-							],
 							"outputs": [
 								{
 									"referenceName": "filename",
