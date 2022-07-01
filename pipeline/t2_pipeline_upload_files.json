@@ -17,6 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"sqlReaderQuery": "Select * From [meta].[etl_nfield_databases]\nwhere IsEnabled=1",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -31,8 +32,8 @@
 				}
 			},
 			{
-				"name": "Execute t1_pipeline_upload_files",
-				"type": "ExecutePipeline",
+				"name": "ForEach1",
+				"type": "ForEach",
 				"dependsOn": [
 					{
 						"activity": "lkp_databases",
@@ -43,21 +44,35 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"pipeline": {
-						"referenceName": "t1_pipeline_upload_files",
-						"type": "PipelineReference"
+					"items": {
+						"value": "@activity('lkp_databases').output.value",
+						"type": "Expression"
 					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"Name": {
-							"value": "@activity('lkp_databases').output.value.Name",
-							"type": "Expression"
-						},
-						"Container": {
-							"value": "@activity('lkp_databases').output.value.Container",
-							"type": "Expression"
+					"activities": [
+						{
+							"name": "Execute t1_pipeline_upload_files",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "t1_pipeline_upload_files",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"Name": {
+										"value": "@item().Name",
+										"type": "Expression"
+									},
+									"Container": {
+										"value": "@item().Container",
+										"type": "Expression"
+									}
+								}
+							}
 						}
-					}
+					]
 				}
 			}
 		],
