@@ -25,7 +25,10 @@
 						"referenceName": "ds_meta_databases",
 						"type": "DatasetReference",
 						"parameters": {
-							"Name": "Nfield-US"
+							"Name": {
+								"value": "@pipeline().parameters.Name",
+								"type": "Expression"
+							}
 						}
 					},
 					"firstRowOnly": false
@@ -78,7 +81,8 @@
 		],
 		"parameters": {
 			"Name": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Nfield-US"
 			}
 		},
 		"folder": {
