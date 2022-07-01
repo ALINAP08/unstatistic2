@@ -18,6 +18,10 @@
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": []
+		"schema": [],
+		"typeProperties": {
+			"schema": "meta",
+			"table": "etl_nfield_metadata"
+		}
 	}
 }
