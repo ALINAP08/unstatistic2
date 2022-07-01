@@ -34,7 +34,7 @@
 					},
 					"activities": [
 						{
-							"name": "Lookup1",
+							"name": "Lookup2",
 							"type": "Lookup",
 							"dependsOn": [],
 							"policy": {
@@ -65,7 +65,7 @@
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "Lookup1",
+									"activity": "Lookup2",
 									"dependencyConditions": [
 										"Succeeded"
 									]
