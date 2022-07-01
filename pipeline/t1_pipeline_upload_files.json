@@ -111,7 +111,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"folder": {
-											"value": "@activity('lkp_metadata1').output.value.Entity",
+											"value": "@item().Entity",
 											"type": "Expression"
 										},
 										"filename": {
