@@ -29,7 +29,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Execute Pipeline1').output.value.output.value\n\n",
+						"value": "@activity('Execute Pipeline1').output.pipelineName\n\n",
 						"type": "Expression"
 					},
 					"activities": [
