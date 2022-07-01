@@ -1,0 +1,27 @@
+{
+	"name": "ds_meta_databases",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "lnk_synd_poc_dev_sql2",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"pram_gbl_secret_key": {
+					"value": "@dataset().Name",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"Name": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "meta",
+			"table": "etl_nfield_databases"
+		}
+	}
+}
