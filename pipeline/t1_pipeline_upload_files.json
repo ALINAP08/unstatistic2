@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup2_copy1",
+				"name": "lkp_metadata1",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -34,11 +34,11 @@
 				}
 			},
 			{
-				"name": "Copy data1_copy1",
+				"name": "copy_data",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Lookup2_copy1",
+						"activity": "lkp_metadata1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -56,7 +56,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "@activity('Lookup2').output.value.Query",
+							"value": "@activity('lkp_metadata').output.value.Query",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -71,15 +71,35 @@
 							"type": "ParquetWriteSettings"
 						}
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
+				"inputs": [
+					{
+						"referenceName": "ds_meta_metadata",
+						"type": "DatasetReference",
+						"parameters": {
+							"Name": {
+								"value": "@pipeline().parameters.Name",
+								"type": "Expression"
+							}
+						}
+					}
+				],
 				"outputs": [
 					{
 						"referenceName": "filename",
 						"type": "DatasetReference",
 						"parameters": {
-							"Name": {
-								"value": "@item().Name",
+							"folder": {
+								"value": "@pipeline().parameters.Name",
 								"type": "Expression"
 							},
 							"filename": {
@@ -93,6 +113,9 @@
 		],
 		"parameters": {
 			"Name": {
+				"type": "string"
+			},
+			"Container": {
 				"type": "string"
 			}
 		},
