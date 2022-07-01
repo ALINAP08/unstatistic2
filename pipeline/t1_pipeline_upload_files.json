@@ -17,10 +17,6 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": {
-							"value": "@pipeline().parameters.Quary",
-							"type": "Expression"
-						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -97,9 +93,6 @@
 		],
 		"parameters": {
 			"Name": {
-				"type": "string"
-			},
-			"Quary": {
 				"type": "string"
 			}
 		},
