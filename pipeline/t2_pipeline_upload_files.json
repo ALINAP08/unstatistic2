@@ -35,7 +35,7 @@
 				}
 			},
 			{
-				"name": "ForEach1",
+				"name": "ForEach_databases",
 				"type": "ForEach",
 				"dependsOn": [
 					{
@@ -51,6 +51,7 @@
 						"value": "@activity('lkp_databases').output.value",
 						"type": "Expression"
 					},
+					"isSequential": false,
 					"activities": [
 						{
 							"name": "Execute t1_pipeline_upload_files",
