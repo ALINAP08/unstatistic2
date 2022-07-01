@@ -7,7 +7,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "lkp_metadata1_copy1",
+						"activity": "lkp_metadata1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -84,7 +84,7 @@
 				]
 			},
 			{
-				"name": "lkp_metadata1_copy1",
+				"name": "lkp_metadata1",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
