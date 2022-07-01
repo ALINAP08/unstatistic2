@@ -12,7 +12,7 @@
 						"referenceName": "t1",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": false
 				}
 			},
 			{
@@ -29,7 +29,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Execute Pipeline1').output.t1.value\n\n",
+						"value": "@activity('Execute Pipeline1').output.value.output.value\n\n",
 						"type": "Expression"
 					},
 					"activities": [
