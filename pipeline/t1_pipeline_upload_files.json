@@ -115,7 +115,7 @@
 											"type": "Expression"
 										},
 										"filename": {
-											"value": "@string(concat(item().ID,'.parquet'))",
+											"value": "@string(concat(item().filedate,'.parquet'))",
 											"type": "Expression"
 										},
 										"Container": {
