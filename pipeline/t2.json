@@ -81,8 +81,62 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"enableStaging": false
-							}
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@activity('Lookup2').output.value.Query",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "test2",
+									"type": "DatasetReference",
+									"parameters": {
+										"Name": {
+											"value": "@item().Name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "filename",
+									"type": "DatasetReference",
+									"parameters": {
+										"Name": {
+											"value": "@item().Name",
+											"type": "Expression"
+										},
+										"filename": {
+											"value": "@concat(activity('Lookup2').output.value.ID,'.parquet')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
 						}
 					]
 				}
