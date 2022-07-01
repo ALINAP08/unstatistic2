@@ -25,7 +25,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "@activity('lkp_metadata1').output.value.Query",
+							"value": "@activity('lkp_metadata1').output.value.Query\n\n",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
