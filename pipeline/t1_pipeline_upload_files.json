@@ -17,12 +17,22 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@pipeline().parameters.Quary",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
 						"referenceName": "ds_meta_metadata",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Name": {
+								"value": "@pipeline().parameters.Name",
+								"type": "Expression"
+							}
+						}
 					},
 					"firstRowOnly": false
 				}
@@ -85,6 +95,14 @@
 				]
 			}
 		],
+		"parameters": {
+			"Name": {
+				"type": "string"
+			},
+			"Quary": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "for KGND"
 		},
