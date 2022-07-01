@@ -1,5 +1,5 @@
 {
-	"name": "t1",
+	"name": "t2_pipeline_upload_files",
 	"properties": {
 		"activities": [
 			{
@@ -15,20 +15,27 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": "Select * from meta.etl_nfield_databases",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"dataset": {
-						"referenceName": "test1",
-						"type": "DatasetReference",
-						"parameters": {
-							"Name": "Nfield-US"
-						}
-					},
 					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Execute t1_pipeline_upload_files",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Lookup1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "t1_pipeline_upload_files",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
 				}
 			}
 		],
