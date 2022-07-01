@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup1",
+				"name": "lkp_databases",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -15,6 +15,18 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_meta_databases",
+						"type": "DatasetReference",
+						"parameters": {
+							"Name": "Nfield-US"
+						}
+					},
 					"firstRowOnly": false
 				}
 			},
@@ -23,7 +35,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Lookup1",
+						"activity": "lkp_databases",
 						"dependencyConditions": [
 							"Succeeded"
 						]
