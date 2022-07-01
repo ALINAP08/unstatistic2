@@ -31,8 +31,8 @@
 				}
 			},
 			{
-				"name": "ForEach1",
-				"type": "ForEach",
+				"name": "Execute t1_pipeline_upload_files",
+				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
 						"activity": "lkp_databases",
@@ -43,36 +43,21 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"items": {
-						"value": "@activity('lkp_databases').output.value",
-						"type": "Expression"
+					"pipeline": {
+						"referenceName": "t1_pipeline_upload_files",
+						"type": "PipelineReference"
 					},
-					"isSequential": false,
-					"activities": [
-						{
-							"name": "Execute t1_pipeline_upload_files",
-							"type": "ExecutePipeline",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"pipeline": {
-									"referenceName": "t1_pipeline_upload_files",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": true,
-								"parameters": {
-									"Name": {
-										"value": "@item().Name",
-										"type": "Expression"
-									},
-									"Container": {
-										"value": "@item().Container",
-										"type": "Expression"
-									}
-								}
-							}
+					"waitOnCompletion": true,
+					"parameters": {
+						"Name": {
+							"value": "@activity('lkp_databases').output.value.Name",
+							"type": "Expression"
+						},
+						"Container": {
+							"value": "@activity('lkp_databases').output.value.Container",
+							"type": "Expression"
 						}
-					]
+					}
 				}
 			}
 		],
