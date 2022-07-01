@@ -3,87 +3,6 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "copy_data",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "lkp_metadata1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": {
-							"value": "@activity('lkp_metadata1').output.value.Query\n\n",
-							"type": "Expression"
-						},
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"sink": {
-						"type": "ParquetSink",
-						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
-						},
-						"formatSettings": {
-							"type": "ParquetWriteSettings"
-						}
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "ds_meta_metadata",
-						"type": "DatasetReference",
-						"parameters": {
-							"Name": {
-								"value": "@pipeline().parameters.Name",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "filename",
-						"type": "DatasetReference",
-						"parameters": {
-							"folder": {
-								"value": "@activity('lkp_metadata1').output.value.Entity",
-								"type": "Expression"
-							},
-							"filename": {
-								"value": "@concat(activity('lkp_metadata1').output.value.filedate,'.parquet')",
-								"type": "Expression"
-							},
-							"Container": {
-								"value": "@pipeline().parameters.Container",
-								"type": "Expression"
-							}
-						}
-					}
-				]
-			},
-			{
 				"name": "lkp_metadata1",
 				"type": "Lookup",
 				"dependsOn": [],
@@ -112,7 +31,102 @@
 							}
 						}
 					},
-					"firstRowOnly": true
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "lkp_metadata1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('lkp_metadata1').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "copy_data_copy1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@item().Query",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_meta_metadata",
+									"type": "DatasetReference",
+									"parameters": {
+										"Name": {
+											"value": "@pipeline().parameters.Name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "filename",
+									"type": "DatasetReference",
+									"parameters": {
+										"folder": {
+											"value": "@activity('lkp_metadata1').output.value.Entity",
+											"type": "Expression"
+										},
+										"filename": {
+											"value": "@concat(activity('lkp_metadata1').output.value.filedate,'.parquet')",
+											"type": "Expression"
+										},
+										"Container": {
+											"value": "@pipeline().parameters.Container",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
 				}
 			}
 		],
