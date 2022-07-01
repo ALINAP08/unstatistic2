@@ -10,11 +10,11 @@
 				"typeProperties": {
 					"activities": [
 						{
-							"name": "copy_data_copy1",
+							"name": "copy_data",
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "lkp_metadata1_copy2",
+									"activity": "lkp_metadata1",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -91,7 +91,7 @@
 							]
 						},
 						{
-							"name": "lkp_metadata1_copy2",
+							"name": "lkp_metadata1",
 							"type": "Lookup",
 							"dependsOn": [],
 							"policy": {
