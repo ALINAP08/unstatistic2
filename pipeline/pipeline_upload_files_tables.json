@@ -39,7 +39,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Append variable1",
+						"activity": "lkp_metadata",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -55,7 +55,14 @@
 						{
 							"name": "copy_data",
 							"type": "Copy",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Append variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -111,7 +118,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"folder": {
-											"value": "@item().Entity",
+											"value": "@variables('startday')",
 											"type": "Expression"
 										},
 										"filename": {
@@ -125,28 +132,21 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "Append variable1",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "startday",
+								"value": {
+									"value": "@string(concat(item().Entity,'/',take(string(pipeline().TriggerTime),4),'/',take(string(pipeline().TriggerTime),7)))",
+									"type": "Expression"
+								}
+							}
 						}
 					]
-				}
-			},
-			{
-				"name": "Append variable1",
-				"type": "AppendVariable",
-				"dependsOn": [
-					{
-						"activity": "lkp_metadata",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "startday",
-					"value": {
-						"value": "@string(pipeline().TriggerTime)",
-						"type": "Expression"
-					}
 				}
 			}
 		],
