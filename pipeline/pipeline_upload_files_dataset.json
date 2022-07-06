@@ -39,7 +39,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Append variable1",
+						"activity": "lkp_databases",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -78,26 +78,6 @@
 						}
 					]
 				}
-			},
-			{
-				"name": "Append variable1",
-				"type": "AppendVariable",
-				"dependsOn": [
-					{
-						"activity": "lkp_databases",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "startdate",
-					"value": {
-						"value": "@string(pipeline().TriggerTime)",
-						"type": "Expression"
-					}
-				}
 			}
 		],
 		"parameters": {
@@ -108,6 +88,9 @@
 		},
 		"variables": {
 			"startdate": {
+				"type": "Array"
+			},
+			"startday": {
 				"type": "Array"
 			}
 		},
