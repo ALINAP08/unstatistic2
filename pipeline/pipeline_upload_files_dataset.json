@@ -5,7 +5,14 @@
 			{
 				"name": "lkp_databases",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Append variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -78,12 +85,30 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Append variable1",
+				"type": "AppendVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "startdate",
+					"value": {
+						"value": "@pipeline().TriggerTime",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
 			"Name": {
 				"type": "string",
 				"defaultValue": "Nfield-US"
+			}
+		},
+		"variables": {
+			"startdate": {
+				"type": "Array"
 			}
 		},
 		"folder": {
