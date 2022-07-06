@@ -39,7 +39,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "lkp_metadata",
+						"activity": "Append variable1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -115,7 +115,7 @@
 											"type": "Expression"
 										},
 										"filename": {
-											"value": "@string(concat(variables('startdate').input.value,'.parquet'))",
+											"value": "@string(concat(variables('startday'),'.parquet'))",
 											"type": "Expression"
 										},
 										"Container": {
@@ -128,6 +128,26 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Append variable1",
+				"type": "AppendVariable",
+				"dependsOn": [
+					{
+						"activity": "lkp_metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "startday",
+					"value": {
+						"value": "@string(pipeline().TriggerTime)",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -136,6 +156,11 @@
 			},
 			"Container": {
 				"type": "string"
+			}
+		},
+		"variables": {
+			"startday": {
+				"type": "Array"
 			}
 		},
 		"folder": {
