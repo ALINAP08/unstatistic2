@@ -141,7 +141,7 @@
 							"typeProperties": {
 								"variableName": "startdate",
 								"value": {
-									"value": "@item().startOfDay",
+									"value": "@startOfDay",
 									"type": "Expression"
 								}
 							}
