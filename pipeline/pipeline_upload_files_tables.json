@@ -140,7 +140,7 @@
 		},
 		"variables": {
 			"startdate": {
-				"type": "Array"
+				"type": "String"
 			}
 		},
 		"folder": {
