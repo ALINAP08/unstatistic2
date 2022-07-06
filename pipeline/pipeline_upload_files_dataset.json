@@ -94,7 +94,7 @@
 				"typeProperties": {
 					"variableName": "startdate",
 					"value": {
-						"value": "@pipeline().TriggerTime",
+						"value": "@string(pipeline().TriggerTime)",
 						"type": "Expression"
 					}
 				}
