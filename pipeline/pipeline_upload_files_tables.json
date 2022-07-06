@@ -55,7 +55,14 @@
 						{
 							"name": "copy_data",
 							"type": "Copy",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Append variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -125,6 +132,19 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "Append variable1",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "startdate",
+								"value": {
+									"value": "@item().startOfDay",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
@@ -136,6 +156,11 @@
 			},
 			"Container": {
 				"type": "string"
+			}
+		},
+		"variables": {
+			"startdate": {
+				"type": "Array"
 			}
 		},
 		"folder": {
