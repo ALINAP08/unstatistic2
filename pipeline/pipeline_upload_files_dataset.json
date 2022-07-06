@@ -5,14 +5,7 @@
 			{
 				"name": "lkp_databases",
 				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "Append variable1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -46,7 +39,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "lkp_databases",
+						"activity": "Append variable1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -89,7 +82,14 @@
 			{
 				"name": "Append variable1",
 				"type": "AppendVariable",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "lkp_databases",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "startdate",
