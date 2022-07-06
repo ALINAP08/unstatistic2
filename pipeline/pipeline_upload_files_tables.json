@@ -138,11 +138,6 @@
 				"type": "string"
 			}
 		},
-		"variables": {
-			"startdate": {
-				"type": "String"
-			}
-		},
 		"folder": {
 			"name": "for KGND"
 		},
