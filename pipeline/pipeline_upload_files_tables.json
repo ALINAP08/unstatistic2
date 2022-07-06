@@ -141,7 +141,7 @@
 							"typeProperties": {
 								"variableName": "startdate",
 								"value": {
-									"value": "@startOfDay",
+									"value": "@pipeline().TriggerTime",
 									"type": "Expression"
 								}
 							}
