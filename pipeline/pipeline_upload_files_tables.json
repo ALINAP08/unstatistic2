@@ -118,7 +118,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"folder": {
-											"value": "@variables('startday')",
+											"value": "@string(variables('startday'))",
 											"type": "Expression"
 										},
 										"filename": {
