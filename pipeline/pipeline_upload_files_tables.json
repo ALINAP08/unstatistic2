@@ -115,7 +115,7 @@
 											"type": "Expression"
 										},
 										"filename": {
-											"value": "@string(concat(pipeline().TriggerTime,'.parquet'))",
+											"value": "@string(concat(replace(replace(replace(pipeline().TriggerTime,'-',''),'T','_'),':','_'),'.parquet'))",
 											"type": "Expression"
 										},
 										"Container": {
