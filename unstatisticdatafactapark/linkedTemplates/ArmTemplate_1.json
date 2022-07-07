@@ -6,6 +6,10 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "unstatisticdatafactapark"
+		},
+		"testkeyAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "@linkedService().secretkey"
 		}
 	},
 	"variables": {
@@ -13,46 +17,30 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/filename')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/testkeyAzureSqlDatabase')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "unstatisticuploadapp",
-					"type": "LinkedServiceReference"
-				},
 				"parameters": {
-					"folder": {
-						"type": "String"
-					},
-					"filename": {
-						"type": "String"
-					},
-					"Container": {
+					"secretkey": {
 						"type": "String"
 					}
 				},
 				"annotations": [],
-				"type": "Parquet",
+				"type": "AzureSqlDatabase",
 				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "@dataset().filename",
-							"type": "Expression"
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "unstatistic_key",
+							"type": "LinkedServiceReference"
 						},
-						"folderPath": {
-							"value": "@dataset().folder",
-							"type": "Expression"
-						},
-						"container": {
-							"value": "@dataset().Container",
+						"secretName": {
+							"value": "[parameters('testkeyAzureSqlDatabase_properties_typeProperties_connectionString_secretName')]",
 							"type": "Expression"
 						}
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": []
+					}
+				}
 			},
 			"dependsOn": []
 		},
@@ -118,6 +106,69 @@
 						"outputs": [
 							{
 								"referenceName": "Parquet1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "for KGND"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_meta_etl_nfield_databases')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_meta_etl_nfield_databases",
+						"description": "Copy table [meta].[etl_nfield_databases] to file",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "modulename_tableName",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "file_meta_etl_nfield_metadata",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -2090,7 +2141,9 @@
 				"schema": [],
 				"typeProperties": {}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/testkeyAzureSqlDatabase')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlTable3')]",
@@ -2132,7 +2185,9 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/testkeyAzureSqlDatabase')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SourceDataset_ov9')]",
@@ -2237,99 +2292,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline_meta_etl_nfield_databases')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy_meta_etl_nfield_databases",
-						"description": "Copy table [meta].[etl_nfield_databases] to file",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "modulename_tableName",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "file_meta_etl_nfield_metadata",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "for KGND"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/synd_poc_dev_sql_meta')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "lnk_synd_poc_dev_sql2",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"pram_gbl_secret_key": {
-							"value": "@dataset().secretname",
-							"type": "Expression"
-						}
-					}
-				},
-				"parameters": {
-					"secretname": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "meta",
-					"table": "etl_nfield_etl_nfield_metadata"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/ds_meta_databases')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -2385,6 +2347,36 @@
 				"typeProperties": {
 					"schema": "meta",
 					"table": "etl_nfield_metadata"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/synd_poc_dev_sql_meta')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "lnk_synd_poc_dev_sql2",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"pram_gbl_secret_key": {
+							"value": "@dataset().secretname",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"secretname": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "meta",
+					"table": "etl_nfield_etl_nfield_metadata"
 				}
 			},
 			"dependsOn": []

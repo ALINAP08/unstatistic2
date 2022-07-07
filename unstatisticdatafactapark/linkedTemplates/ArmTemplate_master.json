@@ -35,6 +35,10 @@
 			"type": "string",
 			"defaultValue": "unstatisticadminapark"
 		},
+		"lnk_synd_poc_dev_sql2_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "@linkedService().pram_gbl_secret_key"
+		},
 		"testkeyAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "@linkedService().secretkey"
@@ -42,10 +46,6 @@
 		"unstatistic_key_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://unstatistickeyvault.vault.azure.net/"
-		},
-		"lnk_synd_poc_dev_sql2_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "@linkedService().pram_gbl_secret_key"
 		},
 		"containerUri": {
 			"type": "string",
@@ -98,9 +98,6 @@
 					"FileServer1_properties_typeProperties_userId": {
 						"value": "[parameters('FileServer1_properties_typeProperties_userId')]"
 					},
-					"testkeyAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('testkeyAzureSqlDatabase_properties_typeProperties_connectionString_secretName')]"
-					},
 					"lnk_synd_poc_dev_sql2_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('lnk_synd_poc_dev_sql2_properties_typeProperties_connectionString_secretName')]"
 					}
@@ -121,6 +118,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"testkeyAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('testkeyAzureSqlDatabase_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},

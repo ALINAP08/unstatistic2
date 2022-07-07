@@ -39,10 +39,6 @@
 			"type": "string",
 			"defaultValue": "unstatisticadminapark"
 		},
-		"testkeyAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "@linkedService().secretkey"
-		},
 		"lnk_synd_poc_dev_sql2_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "@linkedService().pram_gbl_secret_key"
@@ -217,6 +213,45 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Parquet2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "unstatisticuploadapp",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "String"
+					},
+					"container_name": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().container_name",
+							"type": "Expression"
+						}
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/unstatisticuploadapp')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dsr_sql_dummy2')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -369,6 +404,77 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/unstatisticdbaparklinkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/file_meta_etl_nfield_metadata')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "unstatisticuploadapp",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "meta_etl_nfield_databases.Parquet",
+						"container": "unqmetaetl"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/unstatisticuploadapp')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/filename')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "unstatisticuploadapp",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder": {
+						"type": "String"
+					},
+					"filename": {
+						"type": "String"
+					},
+					"Container": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().folder",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().Container",
+							"type": "Expression"
+						}
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/unstatisticuploadapp')]"
 			]
 		},
 		{
@@ -528,80 +634,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/localsqldb')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('localsqldb_connectionString')]"
-				},
-				"connectVia": {
-					"referenceName": "localdb",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/localdb')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/testkeyAzureSqlDatabase')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"parameters": {
-					"secretkey": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "unstatistic_key",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": {
-							"value": "[parameters('testkeyAzureSqlDatabase_properties_typeProperties_connectionString_secretName')]",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/unstatistic_key')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/file_meta_etl_nfield_metadata')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "unstatisticuploadapp",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "meta_etl_nfield_databases.Parquet",
-						"container": "unqmetaetl"
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/unstatisticuploadapp')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/lnk_synd_poc_dev_sql2')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -632,42 +664,22 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Parquet2')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/localsqldb')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "unstatisticuploadapp",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"filename": {
-						"type": "String"
-					},
-					"container_name": {
-						"type": "String"
-					}
-				},
 				"annotations": [],
-				"type": "Parquet",
+				"type": "SqlServer",
 				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "@dataset().filename",
-							"type": "Expression"
-						},
-						"container": {
-							"value": "@dataset().container_name",
-							"type": "Expression"
-						}
-					},
-					"compressionCodec": "snappy"
+					"connectionString": "[parameters('localsqldb_connectionString')]"
 				},
-				"schema": []
+				"connectVia": {
+					"referenceName": "localdb",
+					"type": "IntegrationRuntimeReference"
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/unstatisticuploadapp')]"
+				"[concat(variables('factoryId'), '/integrationRuntimes/localdb')]"
 			]
 		}
 	]
