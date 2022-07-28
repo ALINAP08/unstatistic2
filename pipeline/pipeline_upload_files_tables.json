@@ -111,7 +111,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"folder": {
-											"value": "@string(concat(toLower(substring(item().Entity,1,1)),'/',replace(replace(replace(replace(take(pipeline().TriggerTime,7),'-','/'),'[',''),']',''),'\"','')))",
+											"value": "@string(concat(toLower(substring(item().Entity,4,1)),'/',replace(replace(replace(replace(take(pipeline().TriggerTime,7),'-','/'),'[',''),']',''),'\"','')))",
 											"type": "Expression"
 										},
 										"filename": {
