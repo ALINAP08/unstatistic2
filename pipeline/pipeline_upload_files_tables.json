@@ -141,7 +141,7 @@
 							"typeProperties": {
 								"variableName": "namee",
 								"value": {
-									"value": "@concat(toLower(substring(item().Entity,4,1))\n,substring(item().Entity,5,add(length(item().Entity),-1)))",
+									"value": "@concat(toLower(substring(item().Entity,4,1))\n,substring(item().Entity,5,add(length(item().Entity),-6)))",
 									"type": "Expression"
 								}
 							}
