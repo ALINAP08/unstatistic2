@@ -51,12 +51,7 @@
 								}
 							],
 							"typeProperties": {
-								"notebookPath": "/Users/alina_parkhomenko@epam.com/test",
-								"libraries": [
-									{
-										"jar": ""
-									}
-								]
+								"notebookPath": "/Users/alina_parkhomenko@epam.com/test"
 							},
 							"linkedServiceName": {
 								"referenceName": "AzureDatabricks1",
