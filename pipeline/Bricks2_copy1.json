@@ -44,9 +44,19 @@
 								"secureOutput": false,
 								"secureInput": false
 							},
-							"userProperties": [],
+							"userProperties": [
+								{
+									"name": "info",
+									"value": "us_us_us"
+								}
+							],
 							"typeProperties": {
-								"notebookPath": "/Users/alina_parkhomenko@epam.com/test"
+								"notebookPath": "/Users/alina_parkhomenko@epam.com/test",
+								"libraries": [
+									{
+										"jar": ""
+									}
+								]
 							},
 							"linkedServiceName": {
 								"referenceName": "AzureDatabricks1",
@@ -60,6 +70,9 @@
 		"variables": {
 			"arr": {
 				"type": "Array"
+			},
+			"namee": {
+				"type": "String"
 			}
 		},
 		"folder": {
