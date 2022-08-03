@@ -59,7 +59,7 @@
 								"type": "LinkedServiceReference",
 								"parameters": {
 									"BR_KEY": {
-										"value": "@activity('Execute Pipeline1').output",
+										"value": "@activity('Execute Pipeline1').output.NName",
 										"type": "Expression"
 									}
 								}
