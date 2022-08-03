@@ -10,7 +10,7 @@
 				"typeProperties": {
 					"variableName": "arr",
 					"value": {
-						"value": "@createArray('1','2') ",
+						"value": "@createArray('1') ",
 						"type": "Expression"
 					}
 				}
