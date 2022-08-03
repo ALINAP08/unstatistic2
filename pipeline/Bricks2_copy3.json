@@ -24,12 +24,6 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
-					},
-					{
-						"activity": "Execute Pipeline1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
 					}
 				],
 				"userProperties": [],
@@ -67,25 +61,12 @@
 						}
 					]
 				}
-			},
-			{
-				"name": "Execute Pipeline1",
-				"type": "ExecutePipeline",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "pipeline_upload_files_dataset",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
 			}
 		],
 		"parameters": {
 			"dBR_PAR": {
 				"type": "string",
-				"defaultValue": "US"
+				"defaultValue": "US_NAME"
 			}
 		},
 		"variables": {
