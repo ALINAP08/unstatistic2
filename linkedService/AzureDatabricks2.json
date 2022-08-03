@@ -1,0 +1,29 @@
+{
+	"name": "AzureDatabricks2",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"parameters": {
+			"BR_KEY": {
+				"type": "String",
+				"defaultValue": "US"
+			}
+		},
+		"annotations": [],
+		"type": "AzureDatabricks",
+		"typeProperties": {
+			"domain": "https://adb-4637037959658694.14.azuredatabricks.net",
+			"newClusterNodeType": "Standard_DS3_v2",
+			"newClusterNumOfWorker": "1",
+			"newClusterCustomTags": {
+				"DB_NAME": {
+					"value": "@linkedService().BR_KEY",
+					"type": "Expression"
+				}
+			},
+			"newClusterVersion": "10.3.x-scala2.12",
+			"newClusterInitScripts": [],
+			"clusterOption": "Fixed",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDc1NDMzNzE5LTIyQzQtNDlGRi1BMTg2LUVFNzA2Nzg5MDVGQl9hYzUzMDFjOS1kYzYyLTQxNjItYWE0NS0zZTQ3ZWI1YTQyNTEiDQp9"
+		}
+	}
+}
