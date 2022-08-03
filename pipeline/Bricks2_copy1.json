@@ -44,12 +44,7 @@
 								"secureOutput": false,
 								"secureInput": false
 							},
-							"userProperties": [
-								{
-									"name": "info",
-									"value": "us_us_us"
-								}
-							],
+							"userProperties": [],
 							"typeProperties": {
 								"notebookPath": "/Users/alina_parkhomenko@epam.com/test"
 							},
