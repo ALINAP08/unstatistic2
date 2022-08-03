@@ -24,6 +24,12 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "Execute Pipeline1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"userProperties": [],
@@ -52,11 +58,27 @@
 								"referenceName": "AzureDatabricks2",
 								"type": "LinkedServiceReference",
 								"parameters": {
-									"BR_KEY": "uS"
+									"BR_KEY": {
+										"value": "@activity('Execute Pipeline1').output",
+										"type": "Expression"
+									}
 								}
 							}
 						}
 					]
+				}
+			},
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pipeline_upload_files_dataset",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
 				}
 			}
 		],
