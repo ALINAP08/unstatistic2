@@ -52,10 +52,7 @@
 								"referenceName": "AzureDatabricks2",
 								"type": "LinkedServiceReference",
 								"parameters": {
-									"BR_KEY": {
-										"value": "@variables('namee')",
-										"type": "Expression"
-									}
+									"BR_KEY": "uS"
 								}
 							}
 						}
