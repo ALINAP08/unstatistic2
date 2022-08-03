@@ -59,7 +59,7 @@
 								"type": "LinkedServiceReference",
 								"parameters": {
 									"BR_KEY": {
-										"value": "@activity('Execute Pipeline1').output.NName",
+										"value": "@pipeline().parameters.dBR_PAR",
 										"type": "Expression"
 									}
 								}
@@ -82,6 +82,12 @@
 				}
 			}
 		],
+		"parameters": {
+			"dBR_PAR": {
+				"type": "string",
+				"defaultValue": "US"
+			}
+		},
 		"variables": {
 			"arr": {
 				"type": "Array"
