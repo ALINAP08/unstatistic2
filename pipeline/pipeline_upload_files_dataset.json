@@ -81,7 +81,7 @@
 			}
 		],
 		"parameters": {
-			"NName": {
+			"Name": {
 				"type": "string",
 				"defaultValue": "Nfield-US"
 			}
