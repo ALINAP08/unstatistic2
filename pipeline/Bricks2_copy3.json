@@ -3,70 +3,36 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Set variable1",
-				"type": "SetVariable",
+				"name": "print_Hello",
+				"type": "DatabricksNotebook",
 				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "arr",
-					"value": {
-						"value": "@createArray('1') ",
-						"type": "Expression"
+					"notebookPath": "/Users/alina_parkhomenko@epam.com/test"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks2",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"clientID": "us",
+						"studyID": "1234"
 					}
-				}
-			},
-			{
-				"name": "ForEach1",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "Set variable1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@variables('arr')",
-						"type": "Expression"
-					},
-					"activities": [
-						{
-							"name": "print_Hello",
-							"type": "DatabricksNotebook",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"notebookPath": "/Users/alina_parkhomenko@epam.com/test"
-							},
-							"linkedServiceName": {
-								"referenceName": "AzureDatabricks2",
-								"type": "LinkedServiceReference",
-								"parameters": {
-									"BR_KEY": {
-										"value": "@pipeline().parameters.dBR_PAR",
-										"type": "Expression"
-									}
-								}
-							}
-						}
-					]
 				}
 			}
 		],
 		"parameters": {
-			"dBR_PAR": {
-				"type": "string",
-				"defaultValue": "US_NAME"
+			"client_ID": {
+				"type": "string"
+			},
+			"study_ID": {
+				"type": "string"
 			}
 		},
 		"variables": {
