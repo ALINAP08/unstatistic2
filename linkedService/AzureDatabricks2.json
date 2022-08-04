@@ -3,9 +3,13 @@
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"parameters": {
-			"BR_KEY": {
+			"clientID": {
 				"type": "String",
-				"defaultValue": "US"
+				"defaultValue": "us"
+			},
+			"studyID": {
+				"type": "String",
+				"defaultValue": "1234"
 			}
 		},
 		"annotations": [],
@@ -15,15 +19,19 @@
 			"newClusterNodeType": "Standard_DS3_v2",
 			"newClusterNumOfWorker": "1",
 			"newClusterCustomTags": {
-				"DB_NAME": {
-					"value": "@linkedService().BR_KEY",
+				"clientID": {
+					"value": "@linkedService().clientID",
+					"type": "Expression"
+				},
+				"studyID": {
+					"value": "@linkedService().studyID",
 					"type": "Expression"
 				}
 			},
-			"newClusterVersion": "10.3.x-scala2.12",
+			"newClusterVersion": "10.4.x-scala2.12",
 			"newClusterInitScripts": [],
 			"clusterOption": "Fixed",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDc1NDMzNzE5LTIyQzQtNDlGRi1BMTg2LUVFNzA2Nzg5MDVGQl9hYzUzMDFjOS1kYzYyLTQxNjItYWE0NS0zZTQ3ZWI1YTQyNTEiDQp9"
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDc1NDMzNzE5LTIyQzQtNDlGRi1BMTg2LUVFNzA2Nzg5MDVGQl83MDdhMDhjZS1hZWU5LTRjZWMtOGRlOS0wMDRhNWFkZGRmZmMiDQp9"
 		}
 	}
 }
