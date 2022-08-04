@@ -18,11 +18,17 @@
 					"notebookPath": "/Users/alina_parkhomenko@epam.com/test"
 				},
 				"linkedServiceName": {
-					"referenceName": "AzureDatabricks2",
+					"referenceName": "AzureDatabricks3",
 					"type": "LinkedServiceReference",
 					"parameters": {
-						"clientID": "us",
-						"studyID": "1234"
+						"clientIDp": {
+							"value": "@pipeline().parameters.client_ID",
+							"type": "Expression"
+						},
+						"studyIDp": {
+							"value": "@pipeline().parameters.study_ID",
+							"type": "Expression"
+						}
 					}
 				}
 			}
