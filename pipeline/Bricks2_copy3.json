@@ -40,7 +40,7 @@
 			},
 			"study_ID": {
 				"type": "string",
-				"defaultValue": "1234"
+				"defaultValue": "12"
 			}
 		},
 		"folder": {
