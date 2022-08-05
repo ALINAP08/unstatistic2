@@ -18,12 +18,12 @@
 			"newClusterNumOfWorker": "1",
 			"newClusterCustomTags": {
 				"clientID": "us",
-				"studyID": "123"
+				"studyID": "1234"
 			},
 			"newClusterVersion": "10.4.x-scala2.12",
 			"newClusterInitScripts": [],
 			"clusterOption": "Fixed",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDc1NDMzNzE5LTIyQzQtNDlGRi1BMTg2LUVFNzA2Nzg5MDVGQl9hMDAwYmNjZi1jMWY4LTQwMzgtYTM4Mi1iMDBhYTE5MmNhZGQiDQp9"
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDc1NDMzNzE5LTIyQzQtNDlGRi1BMTg2LUVFNzA2Nzg5MDVGQl8wNGI2ZjY3NC1lZGY2LTRmMDUtYTRiNy1kZWEyOWI1MmM1M2QiDQp9"
 		}
 	}
 }
